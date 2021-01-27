@@ -21,6 +21,11 @@ public enum Skills {
     Knives(Agility, Reflexes),
     Staves(Agility, Endurance),
 
+    // ranged
+    Bows(Agility, Reflexes),
+    Throwing(Strength, Reflexes),
+    CrossBows(Agility, Reflexes),
+
     // Styles
     SingleWeaponStyle(),
     TwoWeaponStyle(),
@@ -33,6 +38,7 @@ public enum Skills {
     ColdMagic(Intelligence, Endurance),
     AirMagic(Intelligence, Agility),
     DarkMagic(Willpower, Willpower),
+    Alchemy(Intelligence, null),
 
     // Thief skills
     Hiding(Agility, Perception),
@@ -44,7 +50,13 @@ public enum Skills {
     // physical
     Swimming(Endurance, null),
     Climbing(Strength, null),
-    Jumping(Agility, null);
+    Jumping(Agility, null),
+
+    // Misc
+    Reading(Intelligence, null),
+    Writing(Intelligence, null),
+    ForeignLanguages(Intelligence, null);
+
 
     private Attributes primaryAttribute;
     private Attributes defendingAttribute;
