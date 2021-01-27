@@ -1,5 +1,32 @@
 
 pack.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+data/ui/DialogueBox
+  rotate: false
+  xy: 2, 16
+  size: 800, 300
+  orig: 800, 300
+  offset: 0, 0
+  index: -1
+data/ui/ScrollBar
+  rotate: false
+  xy: 804, 32
+  size: 12, 284
+  orig: 12, 284
+  offset: 0, 0
+  index: -1
+data/ui/ScrollBarKnob
+  rotate: false
+  xy: 2, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+
+pack2.png
 size: 1024, 1024
 format: RGBA8888
 filter: Nearest, Nearest

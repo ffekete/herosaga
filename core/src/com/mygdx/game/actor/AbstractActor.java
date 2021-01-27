@@ -18,24 +18,17 @@ public class AbstractActor {
     public Race race;
     public Armor armor; // = new Armor("let", "LeatherArmor");
     private HashMap<String, String> bodyPartColours;
+    private HashMap<String, Integer> attributes;
 
     private CharacterAnimation characterAnimation;
     private ArmorAnimation armorAnimation;
 
     public AbstractActor() {
         bodyPartColours = new HashMap<>();
-    }
-
-    public AbstractActor(Race race, Gender gender, HashMap<String, String> bodyPartColours) {
-        characterAnimation = new CharacterAnimation();
-        characterAnimation.loadAnimation(race.name(), gender.name());
-        if (this.armor != null) {
-            armorAnimation = new ArmorAnimation();
-            armorAnimation.loadAnimation(race.name(), gender.name(), armor.id);
+        attributes = new HashMap<>();
+        for (Attributes value : Attributes.values()) {
+            attributes.put(value.name(), 5);
         }
-        this.gender = gender;
-        this.race = race;
-        this.bodyPartColours = bodyPartColours;
     }
 
     public void draw(SpriteBatch batch) {
@@ -120,5 +113,13 @@ public class AbstractActor {
 
     public void setCharacterAnimation(CharacterAnimation characterAnimation) {
         this.characterAnimation = characterAnimation;
+    }
+
+    public HashMap<String, Integer> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(HashMap<String, Integer> attributes) {
+        this.attributes = attributes;
     }
 }

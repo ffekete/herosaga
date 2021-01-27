@@ -1,8 +1,11 @@
 package com.mygdx.game.store;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.Attribute;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.DynamicsModifier;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.actor.AbstractActor;
+import com.mygdx.game.actor.Attributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +24,6 @@ public class ActorStore {
         Json json1 = new Json();
         actors = json1.fromJson(actors.getClass(), Gdx.files.internal("data/actors/actors.json"));
         actors.forEach(AbstractActor::loadAnimation);
-        System.out.println(actors.get(0).name);
-        System.out.println(actors.get(1).name);
     }
 
 }
