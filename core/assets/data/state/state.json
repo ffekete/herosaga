@@ -5,7 +5,7 @@
       "class": "com.mygdx.game.state.overrides.CharacterDataOverride",
       "x": 500,
       "y": 300,
-      "actorId": "aldoth"
+      "actorId": "aldoth2"
     }
   ]
 }
