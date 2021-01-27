@@ -1,0 +1,29 @@
+[
+  {
+    "class": "com.mygdx.game.stage.Stage",
+    "id": "forest_01",
+    "tileset": "forest",
+    "actorData": [
+      {
+        "class": "com.mygdx.game.stage.ActorDTO",
+        "id": "aldoth",
+        "x": 5,
+        "y": 5
+      }
+    ]
+  },
+
+  {
+    "class": "com.mygdx.game.stage.Stage",
+    "id": "forest_02",
+    "tileset": "forest",
+    "actorData": [
+      {
+        "class": "com.mygdx.game.stage.ActorDTO",
+        "id": "aldoth2",
+        "x": 100,
+        "y": 50
+      }
+    ]
+  }
+]

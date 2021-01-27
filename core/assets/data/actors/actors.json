@@ -1,0 +1,36 @@
+[
+  {
+    "class": "com.mygdx.game.actor.AbstractActor",
+    "x": "100",
+    "y": "100",
+    "id": "aldoth",
+    "name": "Aldoth",
+    "gender": "Male",
+    "race": "Human",
+    "bodyPartColours": {
+      "Eyes": "4382e8",
+      "Ears": "FFFFFF",
+      "Mouth": "FFFFFF",
+      "Hair": "bd7126",
+      "Head": "edbc7b",
+      "Torso": "edbc7b"
+    }
+  },
+  {
+    "class": "com.mygdx.game.actor.AbstractActor",
+    "x": "0",
+    "y": "0",
+    "id": "aldoth2",
+    "name": "Aldoth2",
+    "gender": "Male",
+    "race": "Human",
+    "bodyPartColours": {
+      "Eyes": "4382e8",
+      "Ears": "FFFFFF",
+      "Mouth": "FFFFFF",
+      "Hair": "0000FF",
+      "Head": "edbc7b",
+      "Torso": "edbc7b"
+    }
+  }
+]

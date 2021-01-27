@@ -1,0 +1,8 @@
+[
+  {
+    "class": "com.mygdx.game.item.Armor",
+    "id": "LeatherArmor",
+    "name": "Leather armor",
+    "description": ""
+  }
+]

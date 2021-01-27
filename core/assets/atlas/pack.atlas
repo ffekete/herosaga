@@ -1,0 +1,55 @@
+
+pack.png
+size: 1024, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+races/human/male/Ears
+  rotate: false
+  xy: 2, 584
+  size: 320, 192
+  orig: 320, 192
+  offset: 0, 0
+  index: -1
+races/human/male/Eyes
+  rotate: false
+  xy: 2, 390
+  size: 320, 192
+  orig: 320, 192
+  offset: 0, 0
+  index: -1
+races/human/male/Hair
+  rotate: false
+  xy: 324, 584
+  size: 320, 192
+  orig: 320, 192
+  offset: 0, 0
+  index: -1
+races/human/male/Head
+  rotate: false
+  xy: 2, 196
+  size: 320, 192
+  orig: 320, 192
+  offset: 0, 0
+  index: -1
+races/human/male/LeatherArmor
+  rotate: false
+  xy: 324, 390
+  size: 320, 192
+  orig: 320, 192
+  offset: 0, 0
+  index: -1
+races/human/male/Mouth
+  rotate: false
+  xy: 646, 584
+  size: 320, 192
+  orig: 320, 192
+  offset: 0, 0
+  index: -1
+races/human/male/Torso
+  rotate: false
+  xy: 2, 2
+  size: 320, 192
+  orig: 320, 192
+  offset: 0, 0
+  index: -1
