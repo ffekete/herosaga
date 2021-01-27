@@ -14,7 +14,7 @@ public class Stage {
     public String id;
     public String tileset;
 
-    private List<StageDTO> actorData;
+    private List<StageActorDTO> actorData;
 
     public void load() {
         actors = new ArrayList<>();

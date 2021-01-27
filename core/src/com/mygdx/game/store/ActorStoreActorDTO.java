@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ActorStoreDTO {
+public class ActorStoreActorDTO {
 
     public Float x, y;
     public String id;

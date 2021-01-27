@@ -1,6 +1,6 @@
 [
   {
-    "class": "com.mygdx.game.store.ActorStoreDTO",
+    "class": "com.mygdx.game.store.ActorStoreActorDTO",
     "kit": "Warrior",
     "x": "100",
     "y": "100",
@@ -32,7 +32,7 @@
     }
   },
   {
-    "class": "com.mygdx.game.store.ActorStoreDTO",
+    "class": "com.mygdx.game.store.ActorStoreActorDTO",
     "kit": "Warrior",
     "x": "0",
     "y": "0",

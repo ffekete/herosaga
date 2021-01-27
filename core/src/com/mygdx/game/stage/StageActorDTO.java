@@ -1,6 +1,6 @@
 package com.mygdx.game.stage;
 
-public class StageDTO {
+public class StageActorDTO {
         public String id;
         public Float x;
         public Float y;

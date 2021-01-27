@@ -14,7 +14,7 @@ public class ActorStore {
 
     public List<AbstractActor> actors = new ArrayList<>();
 
-    private List<ActorStoreDTO> actorDTOS = new ArrayList<>();
+    private List<ActorStoreActorDTO> actorDTOS = new ArrayList<>();
 
     public AbstractActor get(String id) {
         return actors.stream().filter(actors -> actors.id.equals(id)).findFirst().orElse(null);
