@@ -5,7 +5,7 @@
     "tileset": "forest",
     "actorData": [
       {
-        "class": "com.mygdx.game.stage.ActorDTO",
+        "class": "com.mygdx.game.stage.StageDTO",
         "id": "aldoth",
         "x": 5,
         "y": 5
@@ -19,7 +19,7 @@
     "tileset": "forest",
     "actorData": [
       {
-        "class": "com.mygdx.game.stage.ActorDTO",
+        "class": "com.mygdx.game.stage.StageDTO",
         "id": "aldoth2",
         "x": 100,
         "y": 50

@@ -21,10 +21,12 @@ public class Crawler extends ApplicationAdapter {
 		AtlasUnpacker.I.unpack();
 		ItemStore.I.load();
 		ActorStore.I.load();
+		//System.out.println("1 " + ActorStore.I.actors.get(0).armor);
 		StageStore.I.loadAll();
 		StateStore.I.loadAll();
 		StageStore.I.load(StateStore.I.state.stageId);
 		StateStore.I.applyOverrides();
+
 	}
 
 	@Override

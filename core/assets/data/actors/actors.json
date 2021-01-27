@@ -1,10 +1,12 @@
 [
   {
-    "class": "com.mygdx.game.actor.AbstractActor",
+    "class": "com.mygdx.game.store.ActorStoreDTO",
+    "kit": "Warrior",
     "x": "100",
     "y": "100",
     "id": "aldoth",
     "name": "Aldoth",
+    "armor": "LeatherArmor",
     "gender": "Male",
     "race": "Human",
     "bodyPartColours": {
@@ -24,10 +26,14 @@
       "Charisma": 11,
       "Willpower": 12,
       "Intelligence": 13
+    },
+    "skills": {
+      "Swords": 1
     }
   },
   {
-    "class": "com.mygdx.game.actor.AbstractActor",
+    "class": "com.mygdx.game.store.ActorStoreDTO",
+    "kit": "Warrior",
     "x": "0",
     "y": "0",
     "id": "aldoth2",
@@ -41,6 +47,18 @@
       "Hair": "0000FF",
       "Head": "edbc7b",
       "Torso": "edbc7b"
+    },
+    "attributes": {
+      "Strength": 6,
+      "Endurance": 7,
+      "Perception": 8,
+      "Agility": 9,
+      "Reflexes": 10,
+      "Charisma": 11,
+      "Willpower": 12,
+      "Intelligence": 13
+    },
+    "skills": {
     }
   }
 ]

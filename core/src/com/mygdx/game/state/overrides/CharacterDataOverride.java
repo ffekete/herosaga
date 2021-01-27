@@ -1,7 +1,8 @@
-package com.mygdx.game.state;
+package com.mygdx.game.state.overrides;
 
 import com.mygdx.game.actor.AbstractActor;
 import com.mygdx.game.item.Armor;
+import com.mygdx.game.state.Override;
 import com.mygdx.game.store.ActorStore;
 import com.mygdx.game.store.ItemStore;
 

@@ -14,7 +14,7 @@ public class Stage {
     public String id;
     public String tileset;
 
-    private List<ActorDTO> actorData;
+    private List<StageDTO> actorData;
 
     public void load() {
         actors = new ArrayList<>();
@@ -22,7 +22,7 @@ public class Stage {
             AbstractActor actor = ActorStore.I.get(actorData.id);
             actor.x = actorData.x;
             actor.y = actorData.y;
-            actor.armor = actorData.armorId != null ? ((Armor) ItemStore.I.get(actorData.armorId)).cloneItem(): null;
+            actor.armor = actorData.armorId != null ? ((Armor) ItemStore.I.get(actorData.armorId)).cloneItem(): actor.armor;
             actors.add(actor);
         });
     }

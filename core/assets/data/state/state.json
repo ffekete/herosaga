@@ -1,11 +1,11 @@
 {
-  "stageId": "forest_02",
+  "stageId": "forest_01",
   "overrides": [
     {
-      "class": "com.mygdx.game.state.CharacterDataOverride",
+      "class": "com.mygdx.game.state.overrides.CharacterDataOverride",
       "x": 500,
       "y": 300,
-      "actorId": "aldoth2"
+      "actorId": "aldoth"
     }
   ]
 }

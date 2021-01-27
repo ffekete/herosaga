@@ -16,9 +16,11 @@ public class AbstractActor {
     public String name;
     public Gender gender;
     public Race race;
-    public Armor armor; // = new Armor("let", "LeatherArmor");
+    public Armor armor;
     private HashMap<String, String> bodyPartColours;
-    private HashMap<String, Integer> attributes;
+    public HashMap<Attributes, Integer> attributes;
+    public Kit kit;
+    public HashMap<Skills, Integer> skills;
 
     private CharacterAnimation characterAnimation;
     private ArmorAnimation armorAnimation;
@@ -26,9 +28,7 @@ public class AbstractActor {
     public AbstractActor() {
         bodyPartColours = new HashMap<>();
         attributes = new HashMap<>();
-        for (Attributes value : Attributes.values()) {
-            attributes.put(value.name(), 5);
-        }
+        skills = new HashMap<>();
     }
 
     public void draw(SpriteBatch batch) {
@@ -115,11 +115,11 @@ public class AbstractActor {
         this.characterAnimation = characterAnimation;
     }
 
-    public HashMap<String, Integer> getAttributes() {
+    public HashMap<Attributes, Integer> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(HashMap<String, Integer> attributes) {
+    public void setAttributes(HashMap<Attributes, Integer> attributes) {
         this.attributes = attributes;
     }
 }
