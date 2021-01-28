@@ -5,8 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.graph.AtlasUnpacker;
+import com.mygdx.game.state.State;
+import com.mygdx.game.store.ActorStore;
 
 import java.util.*;
+
+import static com.mygdx.game.actor.ActorState.*;
 
 public class CharacterAnimation {
 
@@ -14,7 +18,6 @@ public class CharacterAnimation {
     private Map<BodyPart, Animation<TextureRegion>> walkAnimation = new HashMap<>();
     private Map<BodyPart, Animation<TextureRegion>> deadAnimation = new HashMap<>();
 
-    private ActorState state = ActorState.Walking;
     private float stateTime = 0;
 
     public void loadAnimation(String race, String gender) {
@@ -38,12 +41,12 @@ public class CharacterAnimation {
         });
     }
 
-    public Map<BodyPart, TextureRegion> getAnimationFrames() {
+    public Map<BodyPart, TextureRegion> getAnimationFrames(ActorState state) {
         this.stateTime += Gdx.graphics.getDeltaTime();
 
         Map<BodyPart, TextureRegion> animationFrames = new LinkedHashMap<>();
 
-        switch (this.state) {
+        switch (state) {
             case Idle:
             case Attacking:
                 Arrays.stream(BodyPart.values()).forEach(bodyPart -> {

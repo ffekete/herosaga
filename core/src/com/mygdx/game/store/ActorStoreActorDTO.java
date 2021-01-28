@@ -18,6 +18,8 @@ public class ActorStoreActorDTO {
     public String gender;
     public String race;
     public String armor;
+    public String leftHand;
+    public String rightHand;
     public HashMap<String, String> bodyPartColours;
     public HashMap<String, Integer> attributes;
     public String kit;

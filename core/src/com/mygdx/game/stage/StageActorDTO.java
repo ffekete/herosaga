@@ -5,4 +5,6 @@ public class StageActorDTO {
         public Float x;
         public Float y;
         public String armorId;
+        public String leftHand;
+        public String rightHand;
     }

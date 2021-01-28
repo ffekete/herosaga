@@ -17,7 +17,6 @@ public class ArmorAnimation {
     private Animation<TextureRegion> walkAnimation;
     private Animation<TextureRegion> deadAnimation;
 
-    private ActorState state = ActorState.Walking;
     private float stateTime = 0;
 
     public void loadAnimation(String race, String gender, String armorName) {
@@ -41,12 +40,12 @@ public class ArmorAnimation {
 
     }
 
-    public Map<BodyPart, TextureRegion> getAnimationFrames() {
+    public Map<BodyPart, TextureRegion> getAnimationFrames(ActorState state) {
         this.stateTime += Gdx.graphics.getDeltaTime();
 
         Map<BodyPart, TextureRegion> animationFrames = new LinkedHashMap<>();
 
-        switch (this.state) {
+        switch (state) {
             case Idle:
             case Attacking:
                 animationFrames.put(BodyPart.Torso, idleAnimation.getKeyFrame(this.stateTime));

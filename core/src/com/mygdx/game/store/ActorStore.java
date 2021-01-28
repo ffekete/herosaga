@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.actor.*;
 import com.mygdx.game.item.Armor;
+import com.mygdx.game.item.Equipment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,15 @@ public class ActorStore {
 
             if(dto.armor != null)
                 a.armor = (Armor) ItemStore.I.get( dto.armor);
+
+            if(dto.leftHand != null) {
+                a.leftHand = (Equipment) ItemStore.I.get( dto.leftHand);
+            }
+
+            if(dto.rightHand != null) {
+                a.rightHand = (Equipment) ItemStore.I.get( dto.rightHand);
+            }
+
 
             dto.attributes.entrySet().forEach(entry -> {
                 a.attributes.put(Attributes.valueOf(entry.getKey()), entry.getValue());

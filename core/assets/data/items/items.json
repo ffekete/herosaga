@@ -4,5 +4,11 @@
     "id": "LeatherArmor",
     "name": "Leather armor",
     "description": ""
+  },
+  {
+    "class": "com.mygdx.game.item.OneHandedSword",
+    "id": "ShortSword",
+    "name": "Short sword",
+    "description": ""
   }
 ]

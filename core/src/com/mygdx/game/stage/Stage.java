@@ -2,6 +2,7 @@ package com.mygdx.game.stage;
 
 import com.mygdx.game.actor.AbstractActor;
 import com.mygdx.game.item.Armor;
+import com.mygdx.game.item.Equipment;
 import com.mygdx.game.store.ActorStore;
 import com.mygdx.game.store.ItemStore;
 
@@ -23,6 +24,8 @@ public class Stage {
             actor.x = actorData.x;
             actor.y = actorData.y;
             actor.armor = actorData.armorId != null ? ((Armor) ItemStore.I.get(actorData.armorId)).cloneItem(): actor.armor;
+            actor.leftHand = actorData.leftHand != null ? (Equipment) ItemStore.I.get(actorData.leftHand).cloneItem(): actor.leftHand;
+            actor.rightHand = actorData.rightHand != null ? (Equipment) ItemStore.I.get(actorData.rightHand).cloneItem(): actor.rightHand;
             actors.add(actor);
         });
     }

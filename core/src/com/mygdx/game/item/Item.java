@@ -4,4 +4,8 @@ public class Item {
     public String name;
     public String id;
     public String description;
+
+    public Item cloneItem() {
+        return null;
+    }
 }
