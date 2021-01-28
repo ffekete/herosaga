@@ -7,9 +7,10 @@
       {
         "class": "com.mygdx.game.stage.StageActorDTO",
         "id": "aldoth",
-        "x": 50,
-        "y": 50,
-        "leftHand": "ShortSword"
+        "x": 0,
+        "y": 0,
+        "leftHand": "ShortSword",
+        "rightHand": "ShortSword"
       }
     ]
   },

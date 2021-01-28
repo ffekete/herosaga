@@ -18,6 +18,8 @@ import static com.mygdx.game.actor.ActorState.*;
 
 public class CharacterAnimation {
 
+    public Meta meta;
+
     private Map<BodyPart, Animation<TextureRegion>> idleAnimation = new HashMap<>();
     private Map<BodyPart, Animation<TextureRegion>> walkAnimation = new HashMap<>();
     private Map<BodyPart, Animation<TextureRegion>> deadAnimation = new HashMap<>();
@@ -28,7 +30,7 @@ public class CharacterAnimation {
 
 
         Json json = new Json();
-        Meta meta = json.fromJson(Meta.class, Gdx.files.internal(String.format("races/%s/%s/meta.json", race.toLowerCase(), gender.toLowerCase())));
+        meta = json.fromJson(Meta.class, Gdx.files.internal(String.format("races/%s/%s/meta.json", race.toLowerCase(), gender.toLowerCase())));
 
         // load body animation
         Arrays.stream(BodyPart.values()).forEach(bodyPart -> {

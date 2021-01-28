@@ -5,12 +5,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.actor.animation.ArmorAnimation;
 import com.mygdx.game.actor.animation.CharacterAnimation;
+import com.mygdx.game.actor.animation.Direction;
 import com.mygdx.game.item.Armor;
 import com.mygdx.game.item.Equipment;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.mygdx.game.actor.BodyPart.*;
 
 public class AbstractActor {
 
@@ -27,6 +30,7 @@ public class AbstractActor {
     public Kit kit;
     public HashMap<Skills, Integer> skills;
     public ActorState state = ActorState.Walking;
+    public Direction direction = Direction.Right;
 
     private CharacterAnimation characterAnimation;
     private ArmorAnimation armorAnimation;
@@ -39,29 +43,51 @@ public class AbstractActor {
 
     public void draw(SpriteBatch batch) {
         Map<BodyPart, TextureRegion> animData = characterAnimation.getAnimationFrames(this.state);
+        BodyPart[] partsToRender = new BodyPart[]{
+                Torso,
+                Head,
+                Eyes,
+                Ears,
+                Hair,
+                Mouth,
+            };
+
+        Equipment hand = this.direction == Direction.Left || this.direction == Direction.Up ? this.rightHand : this.leftHand;
+        // draw hand in coverage
+        if (hand != null) {
+            hand.draw(batch, this, -1f, 2f);
+        }
 
         // draw body
-        Arrays.stream(BodyPart.values()).forEach(bodyPart -> {
+        renderBodyParts(batch, animData, partsToRender);
+
+        // draw armor
+        if (this.armor != null) {
+            Map<BodyPart, TextureRegion> armorAnimationData = armorAnimation.getAnimationFrames(this.state);
+            batch.setColor(Color.WHITE);
+            batch.draw(armorAnimationData.get(Torso), this.x, this.y, 0, 0, armorAnimationData.get(Torso).getRegionWidth(), armorAnimationData.get(Torso).getRegionHeight(), 1, 1, 0);
+        }
+
+        // draw beard
+        renderBodyParts(batch, animData, new BodyPart[]{
+                Beard
+            });
+
+
+        // draw other hand
+        hand = this.direction == Direction.Left || this.direction == Direction.Up ? this.leftHand : this.rightHand;
+        if (hand != null) {
+            hand.draw(batch, this, 0f, -2f);
+        }
+    }
+
+    private void renderBodyParts(SpriteBatch batch, Map<BodyPart, TextureRegion> animData, BodyPart[] partsToRender) {
+        Arrays.stream(partsToRender).forEach(bodyPart -> {
             if (bodyPartColours.containsKey(bodyPart.name())) {
                 batch.setColor(Color.valueOf(bodyPartColours.get(bodyPart.name())));
             }
             batch.draw(animData.get(bodyPart), this.x, this.y, 0, 0, animData.get(bodyPart).getRegionWidth(), animData.get(bodyPart).getRegionHeight(), 1, 1, 0);
         });
-
-        // draw armor
-        if (this.armor != null) {
-            Map<BodyPart, TextureRegion> armorAnimationData = armorAnimation.getAnimationFrames(this.state);
-
-            if (bodyPartColours.containsKey(BodyPart.Torso.name())) {
-                batch.setColor(Color.valueOf(bodyPartColours.get(BodyPart.Torso.name())));
-            }
-            batch.draw(armorAnimationData.get(BodyPart.Torso), this.x, this.y, 0, 0, armorAnimationData.get(BodyPart.Torso).getRegionWidth(), armorAnimationData.get(BodyPart.Torso).getRegionHeight(), 1, 1, 0);
-        }
-
-        // draw left hand
-        if (this.leftHand != null) {
-            this.leftHand.draw(batch, this);
-        }
     }
 
     public void loadAnimation() {

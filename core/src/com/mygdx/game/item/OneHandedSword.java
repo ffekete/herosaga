@@ -25,13 +25,13 @@ public class OneHandedSword extends Equipment {
     }
 
     @Override
-    public void draw(SpriteBatch batch, AbstractActor actor) {
+    public void draw(SpriteBatch batch, AbstractActor actor, float xOffset, float yOffset) {
         switch (actor.state) {
 
             case Idle:
             case Walking:
                 batch.setColor(Color.WHITE);
-                batch.draw(textureRegion, actor.x + 16, actor.y+16, 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), 1, 1, 0);
+                batch.draw(textureRegion, actor.x + (textureRegion.getRegionWidth() / 4f) + xOffset, actor.y + (actor.getCharacterAnimation().meta.height / 5f) + yOffset, 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), 1, 1, 0);
                 break;
             case Attacking:
 
