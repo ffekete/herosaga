@@ -11,7 +11,7 @@ public class Equipment extends Item {
         this.description = description;
     }
 
-    public void draw(SpriteBatch batch, AbstractActor actor, float xOffset, float yOffset) {
+    public void draw(SpriteBatch batch, AbstractActor actor, float xOffset, float yOffset, boolean flip) {
 
     }
 }

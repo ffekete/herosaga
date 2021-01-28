@@ -50,43 +50,49 @@ public class AbstractActor {
                 Ears,
                 Hair,
                 Mouth,
-            };
+        };
+
+        boolean flip = this.direction == Direction.Left || this.direction == Direction.Up;
 
         Equipment hand = this.direction == Direction.Left || this.direction == Direction.Up ? this.rightHand : this.leftHand;
         // draw hand in coverage
         if (hand != null) {
-            hand.draw(batch, this, -1f, 2f);
+            hand.draw(batch, this, -1f, 2f, flip);
         }
 
         // draw body
-        renderBodyParts(batch, animData, partsToRender);
+        renderBodyParts(batch, animData, partsToRender, flip);
 
         // draw armor
         if (this.armor != null) {
             Map<BodyPart, TextureRegion> armorAnimationData = armorAnimation.getAnimationFrames(this.state);
             batch.setColor(Color.WHITE);
-            batch.draw(armorAnimationData.get(Torso), this.x, this.y, 0, 0, armorAnimationData.get(Torso).getRegionWidth(), armorAnimationData.get(Torso).getRegionHeight(), 1, 1, 0);
+
+            TextureRegion textureRegion = armorAnimationData.get(Torso);
+            batch.draw(textureRegion.getTexture(), this.x, this.y, 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), 1, 1, 0, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
         }
 
         // draw beard
         renderBodyParts(batch, animData, new BodyPart[]{
                 Beard
-            });
+        }, flip);
 
 
         // draw other hand
         hand = this.direction == Direction.Left || this.direction == Direction.Up ? this.leftHand : this.rightHand;
         if (hand != null) {
-            hand.draw(batch, this, 0f, -2f);
+            hand.draw(batch, this, 0f, -2f, flip);
         }
     }
 
-    private void renderBodyParts(SpriteBatch batch, Map<BodyPart, TextureRegion> animData, BodyPart[] partsToRender) {
+    private void renderBodyParts(SpriteBatch batch, Map<BodyPart, TextureRegion> animData, BodyPart[] partsToRender, boolean flip) {
         Arrays.stream(partsToRender).forEach(bodyPart -> {
             if (bodyPartColours.containsKey(bodyPart.name())) {
                 batch.setColor(Color.valueOf(bodyPartColours.get(bodyPart.name())));
             }
-            batch.draw(animData.get(bodyPart), this.x, this.y, 0, 0, animData.get(bodyPart).getRegionWidth(), animData.get(bodyPart).getRegionHeight(), 1, 1, 0);
+
+            TextureRegion textureRegion = animData.get(bodyPart);
+            batch.draw(textureRegion.getTexture(), this.x, this.y, 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), 1, 1, 0, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
         });
     }
 

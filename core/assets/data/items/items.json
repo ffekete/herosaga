@@ -10,5 +10,11 @@
     "id": "ShortSword",
     "name": "Short sword",
     "description": ""
+  },
+  {
+    "class": "com.mygdx.game.item.Spear",
+    "id": "Spear",
+    "name": "Spear",
+    "description": ""
   }
 ]
