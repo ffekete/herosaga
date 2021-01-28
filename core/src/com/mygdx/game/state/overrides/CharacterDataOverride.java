@@ -19,7 +19,7 @@ public class CharacterDataOverride implements Override {
         actor.x = x == null ? actor.x : x;
         actor.y = y == null ? actor.y : y;
         if(armorId != null) {
-            Armor armor = (Armor) ItemStore.I.get(armorId);
+            Armor armor = (Armor) ItemStore.I.get(armorId).cloneItem();
             actor.armor = armor.cloneItem();
         }
 

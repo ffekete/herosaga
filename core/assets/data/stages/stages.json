@@ -8,8 +8,7 @@
         "class": "com.mygdx.game.stage.StageActorDTO",
         "id": "aldoth",
         "x": 0,
-        "y": 0,
-        "leftHand": "Naginata"
+        "y": 0
       }
     ]
   },

@@ -29,14 +29,14 @@ public class ActorStore {
             AbstractActor a = new AbstractActor();
 
             if(dto.armor != null)
-                a.armor = (Armor) ItemStore.I.get( dto.armor);
+                a.armor = (Armor) ItemStore.I.get( dto.armor).cloneItem();
 
             if(dto.leftHand != null) {
-                a.leftHand = (Equipment) ItemStore.I.get( dto.leftHand);
+                a.leftHand = (Equipment) ItemStore.I.get(dto.leftHand).cloneItem();
             }
 
             if(dto.rightHand != null) {
-                a.rightHand = (Equipment) ItemStore.I.get( dto.rightHand);
+                a.rightHand = (Equipment) ItemStore.I.get( dto.rightHand).cloneItem();
             }
 
 

@@ -7,6 +7,7 @@
     "id": "aldoth",
     "name": "Aldoth",
     "armor": "LeatherArmor",
+    "leftHand": "Spear",
     "gender": "Male",
     "race": "Human",
     "bodyPartColours": {
