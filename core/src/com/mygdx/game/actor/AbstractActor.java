@@ -29,7 +29,7 @@ public class AbstractActor {
     public HashMap<Attributes, Integer> attributes;
     public Kit kit;
     public HashMap<Skills, Integer> skills;
-    public ActorState state = ActorState.Walking;
+    public ActorState state = ActorState.Attacking;
     public Direction direction = Direction.Left;
 
     private CharacterAnimation characterAnimation;
@@ -164,5 +164,10 @@ public class AbstractActor {
 
     public void setAttributes(HashMap<Attributes, Integer> attributes) {
         this.attributes = attributes;
+    }
+
+    public int getAttackSpeed() {
+        return 100;
+        // todo attack speed calc here
     }
 }
