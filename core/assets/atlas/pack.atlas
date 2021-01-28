@@ -1,9 +1,16 @@
 
 pack.png
-size: 32, 16
+size: 64, 16
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+items/weapons/Naginata
+  rotate: false
+  xy: 2, 10
+  size: 25, 4
+  orig: 25, 4
+  offset: 0, 0
+  index: -1
 items/weapons/ShortSword
   rotate: false
   xy: 2, 2
@@ -13,7 +20,7 @@ items/weapons/ShortSword
   index: -1
 items/weapons/Spear
   rotate: false
-  xy: 2, 10
+  xy: 29, 10
   size: 25, 4
   orig: 25, 4
   offset: 0, 0

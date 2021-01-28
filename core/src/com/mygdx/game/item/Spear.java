@@ -31,7 +31,7 @@ public class Spear extends Equipment {
             case Idle:
             case Walking:
                 batch.setColor(Color.WHITE);
-                float calculatedXOffset = (actor.getCharacterAnimation().meta.width / 2f);
+                float calculatedXOffset = (actor.getCharacterAnimation().meta.width / 3f);
                 float calculatedYOffset = (actor.getCharacterAnimation().meta.height / 4f);
                 batch.draw(textureRegion.getTexture(), actor.x - calculatedXOffset - xOffset, actor.y + calculatedYOffset + yOffset, 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), 1, 1, 0, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
                 break;

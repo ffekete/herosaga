@@ -16,5 +16,11 @@
     "id": "Spear",
     "name": "Spear",
     "description": ""
+  },
+  {
+    "class": "com.mygdx.game.item.Spear",
+    "id": "Naginata",
+    "name": "Naginata",
+    "description": ""
   }
 ]
