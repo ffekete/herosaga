@@ -15,7 +15,8 @@
       "Mouth": "FFFFFF",
       "Hair": "bd7126",
       "Head": "edbc7b",
-      "Torso": "edbc7b"
+      "Torso": "edbc7b",
+      "Beard": "4382e8"
     },
     "attributes": {
       "Strength": 6,
@@ -46,7 +47,8 @@
       "Mouth": "FFFFFF",
       "Hair": "0000FF",
       "Head": "edbc7b",
-      "Torso": "edbc7b"
+      "Torso": "edbc7b",
+      "Beard": "4382e8"
     },
     "attributes": {
       "Strength": 6,

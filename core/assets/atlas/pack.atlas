@@ -40,56 +40,63 @@ data/ui/ScrollBarKnob
   index: -1
 
 pack3.png
-size: 1024, 1024
+size: 1024, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+races/human/male/Beard
+  rotate: false
+  xy: 2, 2
+  size: 70, 58
+  orig: 70, 58
+  offset: 0, 0
+  index: -1
 races/human/male/Ears
   rotate: false
-  xy: 2, 584
-  size: 320, 192
-  orig: 320, 192
+  xy: 74, 2
+  size: 70, 58
+  orig: 70, 58
   offset: 0, 0
   index: -1
 races/human/male/Eyes
   rotate: false
-  xy: 2, 390
-  size: 320, 192
-  orig: 320, 192
+  xy: 146, 2
+  size: 70, 58
+  orig: 70, 58
   offset: 0, 0
   index: -1
 races/human/male/Hair
   rotate: false
-  xy: 324, 584
-  size: 320, 192
-  orig: 320, 192
+  xy: 218, 2
+  size: 70, 58
+  orig: 70, 58
   offset: 0, 0
   index: -1
 races/human/male/Head
   rotate: false
-  xy: 2, 196
-  size: 320, 192
-  orig: 320, 192
+  xy: 290, 2
+  size: 70, 58
+  orig: 70, 58
   offset: 0, 0
   index: -1
 races/human/male/LeatherArmor
   rotate: false
-  xy: 324, 390
-  size: 320, 192
-  orig: 320, 192
+  xy: 362, 2
+  size: 70, 58
+  orig: 70, 58
   offset: 0, 0
   index: -1
 races/human/male/Mouth
   rotate: false
-  xy: 646, 584
-  size: 320, 192
-  orig: 320, 192
+  xy: 434, 2
+  size: 70, 58
+  orig: 70, 58
   offset: 0, 0
   index: -1
 races/human/male/Torso
   rotate: false
-  xy: 2, 2
-  size: 320, 192
-  orig: 320, 192
+  xy: 506, 2
+  size: 70, 58
+  orig: 70, 58
   offset: 0, 0
   index: -1

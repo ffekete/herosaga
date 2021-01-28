@@ -3,10 +3,10 @@ package com.mygdx.game.actor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.actor.animation.ArmorAnimation;
+import com.mygdx.game.actor.animation.CharacterAnimation;
 import com.mygdx.game.item.Armor;
 import com.mygdx.game.item.Equipment;
-import com.mygdx.game.item.Item;
-import com.mygdx.game.item.OneHandedSword;
 
 import java.util.Arrays;
 import java.util.HashMap;

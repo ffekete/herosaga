@@ -7,6 +7,7 @@ public enum BodyPart {
     Eyes,
     Hair,
     Mouth,
-    Ears
+    Ears,
+    Beard
 
 }
