@@ -22,5 +22,11 @@
     "id": "Naginata",
     "name": "Naginata",
     "description": ""
+  },
+  {
+    "class": "com.mygdx.game.item.Shield",
+    "id": "SmallShield",
+    "name": "SnammShield",
+    "description": ""
   }
 ]

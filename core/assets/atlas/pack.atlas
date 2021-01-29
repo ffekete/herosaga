@@ -1,5 +1,18 @@
 
 pack.png
+size: 16, 16
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+items/shields/SmallShield
+  rotate: false
+  xy: 2, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+
+pack2.png
 size: 64, 16
 format: RGBA8888
 filter: Nearest, Nearest
@@ -26,7 +39,7 @@ items/weapons/Spear
   offset: 0, 0
   index: -1
 
-pack2.png
+pack3.png
 size: 1024, 512
 format: RGBA8888
 filter: Nearest, Nearest
@@ -53,7 +66,7 @@ data/ui/ScrollBarKnob
   offset: 0, 0
   index: -1
 
-pack3.png
+pack4.png
 size: 1024, 64
 format: RGBA8888
 filter: Nearest, Nearest
