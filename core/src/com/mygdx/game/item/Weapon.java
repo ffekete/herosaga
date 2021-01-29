@@ -9,13 +9,9 @@ import com.mygdx.game.graph.AtlasUnpacker;
 
 import java.util.Random;
 
-public class Weapon extends Equipment {
+public abstract class Weapon extends Equipment {
 
     protected TextureRegion textureRegion;
-
-    public Weapon() {
-        super(null, null, null);
-    }
 
     private float rotation = -250f;
     private int attackDelay = 0;
@@ -27,11 +23,6 @@ public class Weapon extends Equipment {
     public Weapon(String name, String id, String description) {
         super(name, id, description);
         this.textureRegion = AtlasUnpacker.I.atlas.findRegion(String.format("items/weapons/%s", id));
-    }
-
-    @Override
-    public Item cloneItem() {
-        return new Weapon(this.name, this.id, this.description);
     }
 
     @Override
