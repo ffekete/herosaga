@@ -20,6 +20,8 @@ public class Spear extends Equipment {
     private int attackDelay = 0;
     private int attackAnimation = 0;
     private float attackXOffset = 5;
+    boolean flipX = false;
+    Boolean flipY = null;
 
     public Spear(String name, String id, String description) {
         super(name, id, description);
@@ -33,6 +35,10 @@ public class Spear extends Equipment {
 
     @Override
     public void draw(SpriteBatch batch, AbstractActor actor, float xOffset, float yOffset, boolean flip) {
+        if(flipY == null) {
+            // first anim ever, need to decide if flipY needed
+            this.flipY = flip ? true : false;
+        }
         switch (actor.state) {
 
             case Idle:
@@ -52,15 +58,15 @@ public class Spear extends Equipment {
                 calculatedXOffset = -actor.getCharacterAnimation().meta.width / 2f;
                 calculatedYOffset = (actor.getCharacterAnimation().meta.height / 4f);
 
-                boolean flipX;
-                boolean flipY;
-
-                if(flip) {
-                    flipX = (attackAnimation == 0 ? !flip : flip);
-                    flipY = (attackAnimation == 0 ? flip : !flip);
-                } else {
-                    flipX = false;
-                    flipY = false;
+                // flip only if attack is ready
+                if(attackDelay == 0) {
+                    if (flip) {
+                        flipX = (attackAnimation == 0 ? !flip : flip);
+                        flipY = (attackAnimation == 0 ? flip : !flip);
+                    } else {
+                        flipX = false;
+                        flipY = false;
+                    }
                 }
 
                 batch.draw(textureRegion.getTexture(), actor.x - calculatedXOffset - xOffset + attackXOffset, actor.y + calculatedYOffset + yOffset, 0, 0, textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), 1, 1, rotation, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flipX, flipY);
@@ -76,6 +82,18 @@ public class Spear extends Equipment {
     private void calculateOffset(AbstractActor actor, boolean flip) {
         if (attackDelay > 0) {
             attackDelay--;
+
+        } else if(attackDelay == 0) {
+            attackDelay = -1;
+
+            if(flip) {
+                attackXOffset = -15;
+                rotation = 0;
+            } else {
+                attackXOffset = -15;
+                rotation = 0;
+            }
+
         } else {
 
             if (flip) {
@@ -84,15 +102,9 @@ public class Spear extends Equipment {
                 if (attackXOffset <= -40) {
                     attackDelay = actor.getAttackSpeed();
                     attackAnimation = new Random().nextInt(2);
-                    attackXOffset = 0;
-
-                    if(attackAnimation == 0) {
-                        attackXOffset = 0;
-                        rotation = -290;
-                    } else {
-                        attackXOffset = -15;
-                        rotation = 0;
-                    }
+                    attackXOffset = -10;
+                    rotation = 0;
+                    flipY = false;
                     // todo attack calc trigger here
                 }
             } else {
@@ -101,14 +113,9 @@ public class Spear extends Equipment {
                 if (attackXOffset >= 15) {
                     attackDelay = actor.getAttackSpeed();
                     attackAnimation = new Random().nextInt(2);
-
-                    if(attackAnimation == 0) {
-                        attackXOffset = 0;
-                        rotation = -250;
-                    } else {
-                        attackXOffset = -15;
-                        rotation = 0;
-                    }
+                    attackXOffset = -10;
+                    rotation = 0;
+                    flipY = false;
                     // todo attack calc trigger here
                 }
             }
@@ -118,6 +125,16 @@ public class Spear extends Equipment {
     private void calculateRotation(AbstractActor actor, boolean flip) {
         if (attackDelay > 0) {
             attackDelay--;
+
+        } else if(attackDelay == 0) {
+            attackDelay = -1;
+            if(!flip) {
+                attackXOffset = 0;
+                rotation = -250;
+            } else {
+                attackXOffset = 0;
+                rotation = -290;
+            }
         } else {
             if (!flip) {
                 rotation -= 9f;
@@ -125,13 +142,8 @@ public class Spear extends Equipment {
 
                     attackDelay = actor.getAttackSpeed();
                     attackAnimation = new Random().nextInt(2);
-                    if(attackAnimation == 0) {
-                        attackXOffset = 0;
-                        rotation = -250;
-                    } else {
-                        attackXOffset = -15;
-                        rotation = 0;
-                    }
+                    attackXOffset = -10;
+                    rotation = 0;
                     // todo attack calc trigger here
                 }
             } else {
@@ -140,13 +152,11 @@ public class Spear extends Equipment {
 
                     attackDelay = actor.getAttackSpeed();
                     attackAnimation = new Random().nextInt(2);
-                    if(attackAnimation == 0) {
-                        attackXOffset = 0;
-                        rotation = -290;
-                    } else {
-                        attackXOffset = -15;
-                        rotation = 0;
-                    }
+
+                    attackXOffset = -10;
+                    rotation = 0;
+                    flipX = true;
+                    flipY = false;
                     // todo attack calc trigger here
                 }
             }

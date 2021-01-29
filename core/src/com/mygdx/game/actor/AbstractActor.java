@@ -30,7 +30,7 @@ public class AbstractActor {
     public Kit kit;
     public HashMap<Skills, Integer> skills;
     public ActorState state = ActorState.Attacking;
-    public Direction direction = Direction.Left;
+    public Direction direction = Direction.Right;
 
     private CharacterAnimation characterAnimation;
     private ArmorAnimation armorAnimation;
