@@ -1,5 +1,6 @@
 package com.mygdx.game.item;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -97,7 +98,7 @@ public class Weapon extends Equipment {
         } else {
 
             if (flip) {
-                attackXOffset -= 3f;
+                attackXOffset -= Gdx.graphics.getDeltaTime() * 200f;
 
                 if (attackXOffset <= -40) {
                     attackDelay = actor.getAttackSpeed();
@@ -108,7 +109,7 @@ public class Weapon extends Equipment {
                     // todo attack calc trigger here
                 }
             } else {
-                attackXOffset += 3f;
+                attackXOffset += Gdx.graphics.getDeltaTime() * 200f;
 
                 if (attackXOffset >= 15) {
                     attackDelay = actor.getAttackSpeed();
@@ -137,7 +138,7 @@ public class Weapon extends Equipment {
             }
         } else {
             if (!flip) {
-                rotation -= 9f;
+                rotation -= Gdx.graphics.getDeltaTime() * 700f;
                 if (rotation <= -380) {
 
                     attackDelay = actor.getAttackSpeed();
@@ -147,7 +148,7 @@ public class Weapon extends Equipment {
                     // todo attack calc trigger here
                 }
             } else {
-                rotation += 9f;
+                rotation += Gdx.graphics.getDeltaTime() * 700f;
                 if (rotation >= -160) {
 
                     attackDelay = actor.getAttackSpeed();

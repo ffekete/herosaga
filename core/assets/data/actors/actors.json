@@ -2,13 +2,13 @@
   {
     "class": "com.mygdx.game.store.ActorStoreActorDTO",
     "kit": "Warrior",
-    "x": "100",
-    "y": "100",
+    "x": "150",
+    "y": "150",
     "id": "aldoth",
     "name": "Aldoth",
     "armor": "LeatherArmor",
     "leftHand": "SmallShield",
-    "rightHand": "Spear",
+    "rightHand": "Naginata",
     "gender": "Male",
     "race": "Human",
     "bodyPartColours": {
