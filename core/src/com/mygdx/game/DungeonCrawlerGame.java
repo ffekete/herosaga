@@ -43,7 +43,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
 		caveDungeonCreator = new CaveDungeonCreator();
-		dungeon = caveDungeonCreator.create(5, 50, 50, new TextureRegion(new Texture(Gdx.files.internal("GrassTileset.png"))));
+		dungeon = caveDungeonCreator.create(6, 50, 50, new TextureRegion(new Texture(Gdx.files.internal("CaveTileset.png"))));
 
 		Gdx.input.setInputProcessor(new InputAdapter(){
 			@Override
