@@ -1,8 +1,9 @@
 package com.mygdx.game.map;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
-import java.util.Random;
+import java.util.*;
 
 public class CaveDungeonCreator {
 
@@ -16,23 +17,103 @@ public class CaveDungeonCreator {
 
     public Dungeon create(int steps, int width, int height, TextureRegion textureRegion) {
 
-        this.width = width;
-        this.height = height;
-        
-        long start = System.currentTimeMillis();
-        //Create a new map
-        Dungeon cellmap = new Dungeon(width, height, textureRegion);
-        //Set up the map with random values
-        cellmap = initialiseMap(cellmap);
+        Dungeon cellmap;
+        do {
+            this.width = width;
+            this.height = height;
 
-        //And now update the simulation for a set number of steps
-        for(int i=0; i<steps; i++){
-            cellmap = doSimulationStep(cellmap);
-        }
-        addFrame(cellmap);
-        System.out.println("Elapsed: " + (System.currentTimeMillis() - start) + " ms");
+            long start = System.currentTimeMillis();
+            //Create a new map
+            cellmap = new Dungeon(width, height, textureRegion);
+            //Set up the map with random values
+            cellmap = initialiseMap(cellmap);
+
+            //And now update the simulation for a set number of steps
+            for (int i = 0; i < steps; i++) {
+                cellmap = doSimulationStep(cellmap);
+            }
+            addFrame(cellmap);
+            System.out.println("Elapsed: " + (System.currentTimeMillis() - start) + " ms");
+        } while(refine(cellmap) > 2);
 
         return cellmap;
+    }
+
+    private int refine(Dungeon dungeon) {
+
+        int[][] rooms = new int[width][height];
+        int nextRoomNumber = 1;
+
+        // repeat until end of dungeon reached
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                // find first tile that is not assigned to a room
+                if(dungeon.getTile(i,j) == 0 && rooms[i][j] == 0) {
+                    // fill empty tiles with next number
+                    explore(dungeon, i,j,rooms, nextRoomNumber);
+                    nextRoomNumber++;
+                }
+            }
+        }
+
+        // DEBUG
+//        for(int i =0; i< width; i++) {
+//            for (int j = 0; j < height; j++) {
+//                System.out.print(rooms[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+
+        // link room with closest empty tile that is different room
+        return nextRoomNumber;
+    }
+
+    public void explore(Dungeon targetDungeon, int x, int y, int[][] rooms, int value) {
+        boolean[][] alreadyChecked = new boolean[targetDungeon.getWidth()][targetDungeon.getHeight()];
+
+        if (x < 0 || y < 0 || x >= targetDungeon.getWidth() || y >= targetDungeon.getHeight() || targetDungeon.getTile(x, y) > 0) {
+            return;
+        }
+        Deque<Vector2> points = new ArrayDeque<>();
+        points.add(new Vector2(x, y));
+
+        while (!points.isEmpty()) {
+            Vector2 next = points.remove();
+            int px = (int)next.x;
+            int py = (int)next.y;
+
+            if (px < 0 || py < 0 || px >= targetDungeon.getWidth() || py >= targetDungeon.getHeight() || alreadyChecked[px][py]) {
+
+            } else if(targetDungeon.getTile(px, py) > 0) {
+                alreadyChecked[px][py] = true;
+
+            } else {
+                alreadyChecked[px][py] = true;
+
+                if (targetDungeon.getTile(px,py) == 0 && rooms[px][py] == 0) {
+                    rooms[px][py] = value;
+                }
+
+                List<Vector2> newPoints = new ArrayList<>();
+
+                if (py - 1 >= 0 && !alreadyChecked[px][py - 1])
+                    newPoints.add(new Vector2(px, py - 1));
+
+                if (py + 1 < targetDungeon.getHeight() - 1 && !alreadyChecked[px][py + 1])
+                    newPoints.add(new Vector2(px, py + 1));
+
+                if (px + 1 < targetDungeon.getWidth() - 1 && !alreadyChecked[px + 1][py])
+                    newPoints.add(new Vector2(px + 1, py));
+
+                if (px - 1 >= 0 && !alreadyChecked[px - 1][py])
+                    newPoints.add(new Vector2(px - 1, py));
+
+                Collections.shuffle(newPoints, new Random(System.currentTimeMillis()));
+                points.addAll(newPoints);
+            }
+
+        }
+        // no more visited area
     }
 
     private void addFrame(Dungeon map) {

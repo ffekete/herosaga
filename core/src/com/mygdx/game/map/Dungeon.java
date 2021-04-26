@@ -2,6 +2,7 @@ package com.mygdx.game.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.store.CameraStore;
 
 public class Dungeon {
 
@@ -49,6 +50,11 @@ public class Dungeon {
     private void render(int x,
                         int y,
                         SpriteBatch spriteBatch) {
+        if(!(CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16 + 16, y * 16 + 16, 0) ||
+                CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16, y * 16, 0))) {
+            return;
+        }
+
         if (map[x][y] != 0) {
             spriteBatch.draw(getBaseTileTextureRegion(x, y), x * 16, y * 16);
             renderDecoration(x, y, spriteBatch);
@@ -57,6 +63,7 @@ public class Dungeon {
 
     private TextureRegion getBaseTileTextureRegion(int x,
                                                    int y) {
+
         int v = 0;
         if (x == 0 || (x > 0 && map[x - 1][y] == 1)) {
             v += 1;
