@@ -59,9 +59,13 @@ public class CaveDungeonCreator {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
 
+                int gap = verticalGap(dungeon, i,j, Tile.WoodenPlatform);
+
                 if (dungeon.getTile(i, j) == Tile.None
-                        && hasNoTilesAbove(dungeon, i, j, 5)
-                        && hasNoTilesBelow(dungeon, i, j, 5)
+                        && hasNoTilesAbove(dungeon, i, j, 3)
+                        && hasNoTilesBelow(dungeon, i, j, 3)
+                        && gap <= 5
+                        && gap >= 1
                         && new Random().nextInt(100) <= baseChance) {
 
                     for (int k = i; k >= 0 && dungeon.getTile(k, j) == Tile.None; k--) {
@@ -74,6 +78,23 @@ public class CaveDungeonCreator {
                 }
             }
         }
+    }
+
+    private int verticalGap(Dungeon dungeon, int x, int y, Tile excludedTile) {
+        if(dungeon.getTile(x,y) != Tile.None) {
+            return 0;
+        }
+
+        int gap = 1;
+        for(int i = x-1; i >= 0 && (dungeon.getTile(i, y) == Tile.None || dungeon.getTile(i, y) == excludedTile); i--) {
+            gap++;
+        }
+
+        for(int i = x+1; i < width && (dungeon.getTile(i, y) == Tile.None || dungeon.getTile(i, y) == excludedTile); i++) {
+            gap++;
+        }
+
+        return gap;
     }
 
     private boolean hasNoTilesAbove(Dungeon dungeon,
