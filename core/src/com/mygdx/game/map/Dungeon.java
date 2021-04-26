@@ -8,25 +8,27 @@ public class Dungeon {
 
     int width;
     int height;
-    int[][] map;
+    Tile[][] map;
+    Tile baseTile;
     TextureRegion textureRegion;
 
     public Dungeon(int width,
                    int height,
-                   TextureRegion textureRegion) {
+                   Tile baseTile) {
         this.width = width;
         this.height = height;
-        this.map = new int[width][height];
-        this.textureRegion = textureRegion;
+        this.map = new Tile[width][height];
+        this.baseTile = baseTile;
+        this.textureRegion = baseTile.mapToRegion(baseTile);
     }
 
     public void setTile(int x,
                         int y,
-                        int value) {
+                        Tile value) {
         this.map[x][y] = value;
     }
 
-    public int getTile(int x,
+    public Tile getTile(int x,
                        int y) {
         return map[x][y];
     }
@@ -55,7 +57,7 @@ public class Dungeon {
             return;
         }
 
-        if (map[x][y] != 0) {
+        if (map[x][y] != Tile.None) {
             spriteBatch.draw(getBaseTileTextureRegion(x, y), x * 16, y * 16);
             renderDecoration(x, y, spriteBatch);
         }
@@ -64,20 +66,27 @@ public class Dungeon {
     private TextureRegion getBaseTileTextureRegion(int x,
                                                    int y) {
 
+        // return full texture if it is not a tileset
+        if(!map[x][y].tileSet) {
+            return map[x][y].mapToRegion(map[x][y]);
+        }
+
+        Tile actualTile = map[x][y];
+
         int v = 0;
-        if (x == 0 || (x > 0 && map[x - 1][y] == 1)) {
+        if (x == 0 || (x > 0 && map[x - 1][y] == actualTile)) {
             v += 1;
         }
 
-        if (y == 0 || (y > 0 && map[x][y - 1] == 1)) {
+        if (y == 0 || (y > 0 && map[x][y - 1] == actualTile)) {
             v += 8;
         }
 
-        if (x == map.length - 1 || (x < map.length - 1 && map[x + 1][y] == 1)) {
+        if (x == map.length - 1 || (x < map.length - 1 && map[x + 1][y] == actualTile)) {
             v += 4;
         }
 
-        if (y == map[0].length - 1 || (y < map[0].length - 1 && map[x][y + 1] == 1)) {
+        if (y == map[0].length - 1 || (y < map[0].length - 1 && map[x][y + 1] == actualTile)) {
             v += 2;
         }
 
@@ -104,20 +113,27 @@ public class Dungeon {
     private void renderDecoration(int x,
                                   int y,
                                   SpriteBatch spriteBatch) {
+        // return if it is not a tileset
+        if(!map[x][y].tileSet) {
+            return;
+        }
+
+        Tile actualTile = map[x][y];
+
         int v = 0;
-        if (x == 0 || (x > 0 && map[x - 1][y] == 1)) {
+        if (x == 0 || (x > 0 && map[x - 1][y] == actualTile)) {
             v += 1;
         }
 
-        if (y == 0 || (y > 0 && map[x][y - 1] == 1)) {
+        if (y == 0 || (y > 0 && map[x][y - 1] == actualTile)) {
             v += 8;
         }
 
-        if (x == map.length - 1 || (x < map.length - 1 && map[x + 1][y] == 1)) {
+        if (x == map.length - 1 || (x < map.length - 1 && map[x + 1][y] == actualTile)) {
             v += 4;
         }
 
-        if (y == map[0].length - 1 || (y < map[0].length - 1 && map[x][y + 1] == 1)) {
+        if (y == map[0].length - 1 || (y < map[0].length - 1 && map[x][y + 1] == actualTile)) {
             v += 2;
         }
 

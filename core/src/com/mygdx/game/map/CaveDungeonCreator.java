@@ -1,5 +1,7 @@
 package com.mygdx.game.map;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,7 +17,15 @@ public class CaveDungeonCreator {
     private int width;
     private int height;
 
-    public Dungeon create(int steps, int width, int height, TextureRegion textureRegion) {
+    private Tile baseTile;
+
+    public CaveDungeonCreator(Tile baseTile) {
+        this.baseTile = baseTile;
+    }
+
+    public Dungeon create(int steps,
+                          int width,
+                          int height) {
 
         Dungeon cellmap;
         do {
@@ -24,7 +34,7 @@ public class CaveDungeonCreator {
 
             long start = System.currentTimeMillis();
             //Create a new map
-            cellmap = new Dungeon(width, height, textureRegion);
+            cellmap = new Dungeon(width, height, Tile.Rock);
             //Set up the map with random values
             cellmap = initialiseMap(cellmap);
 
@@ -34,9 +44,60 @@ public class CaveDungeonCreator {
             }
             addFrame(cellmap);
             System.out.println("Elapsed: " + (System.currentTimeMillis() - start) + " ms");
-        } while(refine(cellmap) > 2);
+        } while (refine(cellmap) > 2);
+
+        // place platforms
+        placePlatforms(cellmap);
 
         return cellmap;
+    }
+
+    private void placePlatforms(Dungeon dungeon) {
+
+        int baseChance = 100;
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+
+                if (dungeon.getTile(i, j) == Tile.None
+                        && hasNoTilesAbove(dungeon, i, j, 5)
+                        && hasNoTilesBelow(dungeon, i, j, 5)
+                        && new Random().nextInt(100) <= baseChance) {
+
+                    for (int k = i; k >= 0 && dungeon.getTile(k, j) == Tile.None; k--) {
+                        dungeon.setTile(k, j, Tile.WoodenPlatform);
+                    }
+
+                    for (int k = i+1; k < width && dungeon.getTile(k, j) == Tile.None; k++) {
+                        dungeon.setTile(k, j, Tile.WoodenPlatform);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean hasNoTilesAbove(Dungeon dungeon,
+                                    int i,
+                                    int j,
+                                    int amount) {
+        for(int y = j; y < dungeon.getHeight() && y < j + amount; y++) {
+            if(dungeon.getTile(i,y) != Tile.None) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasNoTilesBelow(Dungeon dungeon,
+                                    int i,
+                                    int j,
+                                    int amount) {
+        for(int y = j; y >= 0 && y > j - amount; y--) {
+            if(dungeon.getTile(i,y) != Tile.None) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private int refine(Dungeon dungeon) {
@@ -45,12 +106,12 @@ public class CaveDungeonCreator {
         int nextRoomNumber = 1;
 
         // repeat until end of dungeon reached
-        for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 // find first tile that is not assigned to a room
-                if(dungeon.getTile(i,j) == 0 && rooms[i][j] == 0) {
+                if (dungeon.getTile(i, j) == Tile.None && rooms[i][j] == 0) {
                     // fill empty tiles with next number
-                    explore(dungeon, i,j,rooms, nextRoomNumber);
+                    explore(dungeon, i, j, rooms, nextRoomNumber);
                     nextRoomNumber++;
                 }
             }
@@ -68,10 +129,14 @@ public class CaveDungeonCreator {
         return nextRoomNumber;
     }
 
-    public void explore(Dungeon targetDungeon, int x, int y, int[][] rooms, int value) {
+    public void explore(Dungeon targetDungeon,
+                        int x,
+                        int y,
+                        int[][] rooms,
+                        int value) {
         boolean[][] alreadyChecked = new boolean[targetDungeon.getWidth()][targetDungeon.getHeight()];
 
-        if (x < 0 || y < 0 || x >= targetDungeon.getWidth() || y >= targetDungeon.getHeight() || targetDungeon.getTile(x, y) > 0) {
+        if (x < 0 || y < 0 || x >= targetDungeon.getWidth() || y >= targetDungeon.getHeight() || targetDungeon.getTile(x, y) != Tile.None) {
             return;
         }
         Deque<Vector2> points = new ArrayDeque<>();
@@ -79,18 +144,18 @@ public class CaveDungeonCreator {
 
         while (!points.isEmpty()) {
             Vector2 next = points.remove();
-            int px = (int)next.x;
-            int py = (int)next.y;
+            int px = (int) next.x;
+            int py = (int) next.y;
 
             if (px < 0 || py < 0 || px >= targetDungeon.getWidth() || py >= targetDungeon.getHeight() || alreadyChecked[px][py]) {
 
-            } else if(targetDungeon.getTile(px, py) > 0) {
+            } else if (targetDungeon.getTile(px, py) != Tile.None) {
                 alreadyChecked[px][py] = true;
 
             } else {
                 alreadyChecked[px][py] = true;
 
-                if (targetDungeon.getTile(px,py) == 0 && rooms[px][py] == 0) {
+                if (targetDungeon.getTile(px, py) == Tile.None && rooms[px][py] == 0) {
                     rooms[px][py] = value;
                 }
 
@@ -117,46 +182,48 @@ public class CaveDungeonCreator {
     }
 
     private void addFrame(Dungeon map) {
-        for(int i = 0; i < width; i++) {
-            map.setTile(i, 0, 1);
-            map.setTile(i, height - 1, 1);
+        for (int i = 0; i < width; i++) {
+            map.setTile(i, 0, Tile.Rock);
+            map.setTile(i, height - 1, Tile.Rock);
         }
 
-        for(int i = 0; i < height; i++) {
-            map.setTile(0, i, 1);
-            map.setTile(width - 1, i, 1);
+        for (int i = 0; i < height; i++) {
+            map.setTile(0, i, Tile.Rock);
+            map.setTile(width - 1, i, Tile.Rock);
         }
     }
 
-    private Dungeon initialiseMap(Dungeon map){
-        for(int x = 0; x< width; x++){
-            for(int y = 0; y< height; y++){
-                if(new Random().nextInt(100) < chanceToStartAlive){
-                    map.setTile(x, y, 1);
+    private Dungeon initialiseMap(Dungeon map) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (new Random().nextInt(100) < chanceToStartAlive) {
+                    map.setTile(x, y, Tile.Rock);
                 } else {
-                    map.setTile(x,y,0);
+                    map.setTile(x, y, Tile.None);
                 }
             }
         }
         return map;
     }
 
-    private int countAliveNeighbours(Dungeon map, int x, int y){
+    private int countAliveNeighbours(Dungeon map,
+                                     int x,
+                                     int y) {
         int count = 0;
-        for(int i=-1; i<2; i++){
-            for(int j=-1; j<2; j++){
-                int neighbour_x = x+i;
-                int neighbour_y = y+j;
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                int neighbour_x = x + i;
+                int neighbour_y = y + j;
                 //If we're looking at the middle point
-                if(i == 0 && j == 0){
+                if (i == 0 && j == 0) {
                     //Do nothing, we don't want to add ourselves in!
                 }
                 //In case the index we're looking at it off the edge of the map
-                else if(neighbour_x < 0 || neighbour_y < 0 || neighbour_x >= width || neighbour_y >= height){
+                else if (neighbour_x < 0 || neighbour_y < 0 || neighbour_x >= width || neighbour_y >= height) {
                     count = count + 1;
                 }
                 //Otherwise, a normal check of the neighbour
-                else if(map.getTile(neighbour_x, neighbour_y) == 1){
+                else if (map.getTile(neighbour_x, neighbour_y) != Tile.None) {
                     count = count + 1;
                 }
             }
@@ -164,28 +231,26 @@ public class CaveDungeonCreator {
         return count;
     }
 
-    private Dungeon doSimulationStep(Dungeon oldMap){
-        Dungeon newMap = new Dungeon(width, height, oldMap.textureRegion);
+    private Dungeon doSimulationStep(Dungeon oldMap) {
+        Dungeon newMap = new Dungeon(width, height, oldMap.baseTile);
         //Loop over each row and column of the map
-        for(int x=1; x<oldMap.getWidth() - 1; x++){
-            for(int y=1; y<oldMap.getHeight()-1; y++){
+        for (int x = 1; x < oldMap.getWidth() - 1; x++) {
+            for (int y = 1; y < oldMap.getHeight() - 1; y++) {
                 int nbs = countAliveNeighbours(oldMap, x, y);
                 //The new value is based on our simulation rules
                 //First, if a cell is alive but has too few neighbours, kill it.
-                if(oldMap.getTile(x, y) == 0){
-                    if(nbs < deathLimit){
-                        newMap.setTile(x, y, 0);
-                    }
-                    else{
-                        newMap.setTile(x, y, 1);
+                if (oldMap.getTile(x, y) == Tile.None) {
+                    if (nbs < deathLimit) {
+                        newMap.setTile(x, y, Tile.None);
+                    } else {
+                        newMap.setTile(x, y, Tile.Rock);
                     }
                 } //Otherwise, if the cell is dead now, check if it has the right number of neighbours to be 'born'
-                else{
-                    if(nbs > birthLimit){
-                        newMap.setTile(x, y, 1);
-                    }
-                    else{
-                        newMap.setTile(x, y, 0);
+                else {
+                    if (nbs > birthLimit) {
+                        newMap.setTile(x, y, Tile.Rock);
+                    } else {
+                        newMap.setTile(x, y, Tile.None);
                     }
                 }
             }
@@ -193,20 +258,24 @@ public class CaveDungeonCreator {
         return newMap;
     }
 
-    private void fill(int x, int y, Dungeon oldmap, int originalValue, int value) {
-        if(x >= oldmap.getWidth() || y >= oldmap.getHeight() || x < 0 || y < 0 || oldmap.getTile(x, y) != originalValue || oldmap.getTile(x,y) == value) {
+    private void fill(int x,
+                      int y,
+                      Dungeon oldmap,
+                      Tile originalValue,
+                      Tile value) {
+        if (x >= oldmap.getWidth() || y >= oldmap.getHeight() || x < 0 || y < 0 || oldmap.getTile(x, y) != originalValue || oldmap.getTile(x, y) == value) {
             return;
         }
 
         oldmap.setTile(x, y, value);
 
-        fill(x-1, y, oldmap, originalValue, value);
-        fill(x-1, y-1, oldmap, originalValue, value);
-        fill(x-1, y+1, oldmap, originalValue, value);
-        fill(x, y-1, oldmap, originalValue, value);
-        fill(x, y+1, oldmap, originalValue, value);
-        fill(x+1, y-1, oldmap, originalValue, value);
-        fill(x+1, y, oldmap, originalValue, value);
-        fill(x+1, y+1, oldmap, originalValue, value);
+        fill(x - 1, y, oldmap, originalValue, value);
+        fill(x - 1, y - 1, oldmap, originalValue, value);
+        fill(x - 1, y + 1, oldmap, originalValue, value);
+        fill(x, y - 1, oldmap, originalValue, value);
+        fill(x, y + 1, oldmap, originalValue, value);
+        fill(x + 1, y - 1, oldmap, originalValue, value);
+        fill(x + 1, y, oldmap, originalValue, value);
+        fill(x + 1, y + 1, oldmap, originalValue, value);
     }
 }

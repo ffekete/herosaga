@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.map.CaveDungeonCreator;
 import com.mygdx.game.map.Dungeon;
+import com.mygdx.game.map.Tile;
 import com.mygdx.game.store.CameraStore;
 
 public class DungeonCrawlerGame extends ApplicationAdapter {
@@ -46,8 +47,8 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         tiledMap = new TiledMap();
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-        caveDungeonCreator = new CaveDungeonCreator();
-        dungeon = caveDungeonCreator.create(6, 50, 50, new TextureRegion(new Texture(Gdx.files.internal("CaveTileset.png"))));
+        caveDungeonCreator = new CaveDungeonCreator(Tile.Rock);
+        dungeon = caveDungeonCreator.create(6, 50, 50);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -74,7 +75,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                 }
 
                 if(keycode == Input.Keys.SPACE) {
-                    dungeon = caveDungeonCreator.create(6, 50, 50, new TextureRegion(new Texture(Gdx.files.internal("CaveTileset.png"))));
+                    dungeon = caveDungeonCreator.create(6, 50, 50);
                 }
 
                 return true;
