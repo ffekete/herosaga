@@ -66,8 +66,8 @@ public class Dungeon {
     }
 
     private void renderBackground(int x,
-                        int y,
-                        SpriteBatch spriteBatch) {
+                                  int y,
+                                  SpriteBatch spriteBatch) {
         if (!(CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16 + 16, y * 16 + 16, 0) ||
                 CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16, y * 16, 0))) {
             return;
@@ -233,13 +233,15 @@ public class Dungeon {
         }
 
         // right grass
-        if (v == 0 || v == 9 || v == 11 || v == 3 || v == 1 || v == 8 || v == 10 || v == 2) {
+        if (adjacency == NONE || adjacency == LEFT_DOWN || adjacency == LEFT_UP_DOWN || adjacency == LEFT_UP ||
+                adjacency == LEFT || adjacency == DOWN || adjacency == UP_DOWN || adjacency == UP) {
             mapTextureRegion.setRegion(80, 32, 16, 16);
             spriteBatch.draw(mapTextureRegion, x * 16 + 16, y * 16);
         }
 
         // left grass
-        if (v == 0 || v == 12 || v == 14 || v == 6 || v == 4 || v == 8 || v == 10 || v == 2) {
+        if (adjacency == NONE || adjacency == RIGHT_DOWN || adjacency == UP_RIGHT_DOWN || adjacency == UP_RIGHT ||
+                adjacency == RIGHT || adjacency == DOWN || adjacency == UP_DOWN || adjacency == UP) {
             mapTextureRegion.setRegion(64, 48, 16, 16);
             spriteBatch.draw(mapTextureRegion, x * 16 - 16, y * 16);
         }
