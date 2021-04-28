@@ -9,7 +9,9 @@ public enum Tile {
     None(false),
     Grass(true),
     Rock(true),
-    WoodenPlatform(false);
+    CaveBackground(false),
+    WoodenPlatform(false),
+    Ladder(false);
 
     boolean tileSet;
 
@@ -20,6 +22,8 @@ public enum Tile {
     private TextureRegion woodenPlatformRegion = new TextureRegion(new Texture(Gdx.files.internal("WoodenPlatform.png")));
     private TextureRegion grassRegion = new TextureRegion(new Texture(Gdx.files.internal("GrassTileset.png")));
     private TextureRegion rockRegion = new TextureRegion(new Texture(Gdx.files.internal("CaveTileset.png")));
+    private TextureRegion ladderRegion = new TextureRegion(new Texture(Gdx.files.internal("Ladder.png")));
+    private TextureRegion caveBackgroundRegion = new TextureRegion(new Texture(Gdx.files.internal("CaveBackground.png")));
 
     public TextureRegion mapToRegion(Tile tile) {
         switch (tile) {
@@ -32,7 +36,10 @@ public enum Tile {
                 return rockRegion;
             case WoodenPlatform:
                 return woodenPlatformRegion;
-
+            case Ladder:
+                return ladderRegion;
+            case CaveBackground:
+                return caveBackgroundRegion;
         }
         return null;
     }

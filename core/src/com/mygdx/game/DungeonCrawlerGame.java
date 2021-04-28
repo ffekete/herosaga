@@ -4,14 +4,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.map.CaveDungeonCreator;
@@ -24,9 +20,6 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
     SpriteBatch batch;
     OrthographicCamera camera;
     Viewport viewport;
-
-    TiledMap tiledMap;
-    TiledMapRenderer tiledMapRenderer;
     CaveDungeonCreator caveDungeonCreator;
     Dungeon dungeon;
 
@@ -38,17 +31,14 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         camera = new OrthographicCamera();
         CameraStore.I.orthographicCamera = camera;
 
-        camera.zoom = 1f;
+        camera.zoom = 0.25f;
         camera.position.x = 350;
         camera.position.y = 400;
         viewport = new FitViewport(1200, 800, camera);
         viewport.apply();
 
-        tiledMap = new TiledMap();
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-
-        caveDungeonCreator = new CaveDungeonCreator(Tile.Rock);
-        dungeon = caveDungeonCreator.create(6, 50, 50);
+        caveDungeonCreator = new CaveDungeonCreator(Tile.Rock, Tile.CaveBackground);
+        dungeon = caveDungeonCreator.create(6, 60, 40);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -75,7 +65,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                 }
 
                 if(keycode == Input.Keys.SPACE) {
-                    dungeon = caveDungeonCreator.create(6, 50, 50);
+                    dungeon = caveDungeonCreator.create(6, 60, 40);
                 }
 
                 return true;

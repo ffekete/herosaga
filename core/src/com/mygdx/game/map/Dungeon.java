@@ -2,24 +2,34 @@ package com.mygdx.game.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.map.tiles.Adjacency;
 import com.mygdx.game.store.CameraStore;
+
+import static com.mygdx.game.map.tiles.Adjacency.*;
 
 public class Dungeon {
 
     int width;
     int height;
+    Tile[][] backgroundMap;
     Tile[][] map;
     Tile baseTile;
-    TextureRegion textureRegion;
+    Tile backgroundTile;
+    TextureRegion mapTextureRegion;
+    TextureRegion backgroundTextureRegion;
 
     public Dungeon(int width,
                    int height,
-                   Tile baseTile) {
+                   Tile baseTile,
+                   Tile backgroundTile) {
         this.width = width;
         this.height = height;
         this.map = new Tile[width][height];
+        this.backgroundMap = new Tile[width][height];
         this.baseTile = baseTile;
-        this.textureRegion = baseTile.mapToRegion(baseTile);
+        this.backgroundTile = backgroundTile;
+        this.mapTextureRegion = baseTile.mapToRegion(baseTile);
+        this.backgroundTextureRegion = backgroundTile.mapToRegion(backgroundTile);
     }
 
     public void setTile(int x,
@@ -29,7 +39,7 @@ public class Dungeon {
     }
 
     public Tile getTile(int x,
-                       int y) {
+                        int y) {
         return map[x][y];
     }
 
@@ -44,15 +54,34 @@ public class Dungeon {
     public void render(SpriteBatch spriteBatch) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
+                renderBackground(i, j, spriteBatch);
+            }
+        }
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 render(i, j, spriteBatch);
             }
+        }
+    }
+
+    private void renderBackground(int x,
+                        int y,
+                        SpriteBatch spriteBatch) {
+        if (!(CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16 + 16, y * 16 + 16, 0) ||
+                CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16, y * 16, 0))) {
+            return;
+        }
+
+        if (backgroundMap[x][y] != Tile.None) {
+            spriteBatch.draw(getBackgroundTileTextureRegion(x, y), x * 16, y * 16);
         }
     }
 
     private void render(int x,
                         int y,
                         SpriteBatch spriteBatch) {
-        if(!(CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16 + 16, y * 16 + 16, 0) ||
+        if (!(CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16 + 16, y * 16 + 16, 0) ||
                 CameraStore.I.orthographicCamera.frustum.pointInFrustum(x * 16, y * 16, 0))) {
             return;
         }
@@ -63,11 +92,60 @@ public class Dungeon {
         }
     }
 
+    private TextureRegion getBackgroundTileTextureRegion(int x,
+                                                         int y) {
+
+        // return full texture if it is not a tileset
+        if (!backgroundMap[x][y].tileSet) {
+            return backgroundMap[x][y].mapToRegion(backgroundMap[x][y]);
+        }
+
+        Tile actualTile = backgroundMap[x][y];
+
+        int v = 0;
+        if (x == 0 || (x > 0 && backgroundMap[x - 1][y] == actualTile)) {
+            v += 1;
+        }
+
+        if (y == 0 || (y > 0 && backgroundMap[x][y - 1] == actualTile)) {
+            v += 8;
+        }
+
+        if (x == backgroundMap.length - 1 || (x < backgroundMap.length - 1 && backgroundMap[x + 1][y] == actualTile)) {
+            v += 4;
+        }
+
+        if (y == backgroundMap[0].length - 1 || (y < backgroundMap[0].length - 1 && backgroundMap[x][y + 1] == actualTile)) {
+            v += 2;
+        }
+
+        Adjacency adjacency = Adjacency.fromNumber(v);
+
+        if (adjacency == NONE) backgroundTextureRegion.setRegion(48, 48, 16, 16);
+        if (adjacency == LEFT) backgroundTextureRegion.setRegion(32, 48, 16, 16);
+        if (adjacency == UP) backgroundTextureRegion.setRegion(48, 32, 16, 16);
+        if (adjacency == LEFT_UP) backgroundTextureRegion.setRegion(32, 32, 16, 16);
+        if (adjacency == RIGHT) backgroundTextureRegion.setRegion(0, 48, 16, 16);
+        if (adjacency == LEFT_RIGHT) backgroundTextureRegion.setRegion(16, 48, 16, 16);
+        if (adjacency == UP_RIGHT) backgroundTextureRegion.setRegion(0, 32, 16, 16);
+        if (adjacency == LEFT_UP_RIGHT) backgroundTextureRegion.setRegion(16, 32, 16, 16);
+        if (adjacency == DOWN) backgroundTextureRegion.setRegion(48, 0, 16, 16);
+        if (adjacency == LEFT_DOWN) backgroundTextureRegion.setRegion(32, 0, 16, 16);
+        if (adjacency == UP_DOWN) backgroundTextureRegion.setRegion(48, 16, 16, 16);
+        if (adjacency == LEFT_UP_DOWN) backgroundTextureRegion.setRegion(32, 16, 16, 16);
+        if (adjacency == RIGHT_DOWN) backgroundTextureRegion.setRegion(0, 0, 16, 16);
+        if (adjacency == LEFT_RIGHT_DOWN) backgroundTextureRegion.setRegion(16, 0, 16, 16);
+        if (adjacency == UP_RIGHT_DOWN) backgroundTextureRegion.setRegion(0, 16, 16, 16);
+        if (adjacency == ALL) backgroundTextureRegion.setRegion(16, 16, 16, 16);
+
+        return backgroundTextureRegion;
+    }
+
     private TextureRegion getBaseTileTextureRegion(int x,
                                                    int y) {
 
         // return full texture if it is not a tileset
-        if(!map[x][y].tileSet) {
+        if (!map[x][y].tileSet) {
             return map[x][y].mapToRegion(map[x][y]);
         }
 
@@ -90,75 +168,80 @@ public class Dungeon {
             v += 2;
         }
 
-        if (v == 0) textureRegion.setRegion(48, 48, 16, 16);
-        if (v == 1) textureRegion.setRegion(32, 48, 16, 16);
-        if (v == 2) textureRegion.setRegion(48, 32, 16, 16);
-        if (v == 3) textureRegion.setRegion(32, 32, 16, 16);
-        if (v == 4) textureRegion.setRegion(0, 48, 16, 16);
-        if (v == 5) textureRegion.setRegion(16, 48, 16, 16);
-        if (v == 6) textureRegion.setRegion(0, 32, 16, 16);
-        if (v == 7) textureRegion.setRegion(16, 32, 16, 16);
-        if (v == 8) textureRegion.setRegion(48, 0, 16, 16);
-        if (v == 9) textureRegion.setRegion(32, 0, 16, 16);
-        if (v == 10) textureRegion.setRegion(48, 16, 16, 16);
-        if (v == 11) textureRegion.setRegion(32, 16, 16, 16);
-        if (v == 12) textureRegion.setRegion(0, 0, 16, 16);
-        if (v == 13) textureRegion.setRegion(16, 0, 16, 16);
-        if (v == 14) textureRegion.setRegion(0, 16, 16, 16);
-        if (v == 15) textureRegion.setRegion(16, 16, 16, 16);
+        Adjacency adjacency = Adjacency.fromNumber(v);
+        if (adjacency == NONE) mapTextureRegion.setRegion(48, 48, 16, 16);
+        if (adjacency == LEFT) mapTextureRegion.setRegion(32, 48, 16, 16);
+        if (adjacency == UP) mapTextureRegion.setRegion(48, 32, 16, 16);
+        if (adjacency == LEFT_UP) mapTextureRegion.setRegion(32, 32, 16, 16);
+        if (adjacency == RIGHT) mapTextureRegion.setRegion(0, 48, 16, 16);
+        if (adjacency == LEFT_RIGHT) mapTextureRegion.setRegion(16, 48, 16, 16);
+        if (adjacency == UP_RIGHT) mapTextureRegion.setRegion(0, 32, 16, 16);
+        if (adjacency == LEFT_UP_RIGHT) mapTextureRegion.setRegion(16, 32, 16, 16);
+        if (adjacency == DOWN) mapTextureRegion.setRegion(48, 0, 16, 16);
+        if (adjacency == LEFT_DOWN) mapTextureRegion.setRegion(32, 0, 16, 16);
+        if (adjacency == UP_DOWN) mapTextureRegion.setRegion(48, 16, 16, 16);
+        if (adjacency == LEFT_UP_DOWN) mapTextureRegion.setRegion(32, 16, 16, 16);
+        if (adjacency == RIGHT_DOWN) mapTextureRegion.setRegion(0, 0, 16, 16);
+        if (adjacency == LEFT_RIGHT_DOWN) mapTextureRegion.setRegion(16, 0, 16, 16);
+        if (adjacency == UP_RIGHT_DOWN) mapTextureRegion.setRegion(0, 16, 16, 16);
+        if (adjacency == ALL) mapTextureRegion.setRegion(16, 16, 16, 16);
 
-        return textureRegion;
+        return mapTextureRegion;
     }
 
     private void renderDecoration(int x,
                                   int y,
                                   SpriteBatch spriteBatch) {
         // return if it is not a tileset
-        if(!map[x][y].tileSet) {
+        if (!map[x][y].tileSet) {
             return;
         }
 
         Tile actualTile = map[x][y];
 
         int v = 0;
-        if (x == 0 || (x > 0 && map[x - 1][y] == actualTile)) {
+        if (x > 0 && map[x - 1][y] == actualTile) {
             v += 1;
         }
 
-        if (y == 0 || (y > 0 && map[x][y - 1] == actualTile)) {
+        if (y > 0 && map[x][y - 1] == actualTile) {
             v += 8;
         }
 
-        if (x == map.length - 1 || (x < map.length - 1 && map[x + 1][y] == actualTile)) {
+        if (x < map.length - 1 && map[x + 1][y] == actualTile) {
             v += 4;
         }
 
-        if (y == map[0].length - 1 || (y < map[0].length - 1 && map[x][y + 1] == actualTile)) {
+        if (y < map[0].length - 1 && map[x][y + 1] == actualTile) {
             v += 2;
         }
 
+        Adjacency adjacency = Adjacency.fromNumber(v);
+
         // upper grass
-        if (v == 0 || v == 1 || v == 4 || v == 5 || v == 8 || v == 9 || v == 12 || v == 13) {
-            textureRegion.setRegion(64, 32, 16, 16);
-            spriteBatch.draw(textureRegion, x * 16, y * 16 + 16);
+        if (adjacency == NONE || adjacency == LEFT || adjacency == RIGHT || adjacency == LEFT_RIGHT || adjacency == DOWN
+                || adjacency == LEFT_DOWN || adjacency == RIGHT_DOWN || adjacency == LEFT_RIGHT_DOWN) {
+            mapTextureRegion.setRegion(64, 32, 16, 16);
+            spriteBatch.draw(mapTextureRegion, x * 16, y * 16 + 16);
         }
 
         // lower grass
-        if (v == 0 || v == 6 || v == 7 || v == 3 || v == 2 || v == 4 || v == 5 || v == 1) {
-            textureRegion.setRegion(80, 48, 16, 16);
-            spriteBatch.draw(textureRegion, x * 16, y * 16 - 16);
+        if (adjacency == NONE || adjacency == UP_RIGHT || adjacency == LEFT_UP_RIGHT || adjacency == LEFT_UP ||
+                adjacency == UP || adjacency == RIGHT || adjacency == LEFT_RIGHT || adjacency == LEFT) {
+            mapTextureRegion.setRegion(80, 48, 16, 16);
+            spriteBatch.draw(mapTextureRegion, x * 16, y * 16 - 16);
         }
 
         // right grass
         if (v == 0 || v == 9 || v == 11 || v == 3 || v == 1 || v == 8 || v == 10 || v == 2) {
-            textureRegion.setRegion(80, 32, 16, 16);
-            spriteBatch.draw(textureRegion, x * 16 + 16, y * 16);
+            mapTextureRegion.setRegion(80, 32, 16, 16);
+            spriteBatch.draw(mapTextureRegion, x * 16 + 16, y * 16);
         }
 
         // left grass
         if (v == 0 || v == 12 || v == 14 || v == 6 || v == 4 || v == 8 || v == 10 || v == 2) {
-            textureRegion.setRegion(64, 48, 16, 16);
-            spriteBatch.draw(textureRegion, x * 16 - 16, y * 16);
+            mapTextureRegion.setRegion(64, 48, 16, 16);
+            spriteBatch.draw(mapTextureRegion, x * 16 - 16, y * 16);
         }
     }
 
