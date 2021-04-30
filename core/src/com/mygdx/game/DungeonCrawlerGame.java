@@ -31,10 +31,10 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         camera = new OrthographicCamera();
         CameraStore.I.orthographicCamera = camera;
 
-        camera.zoom = 0.25f;
+        camera.zoom = 1f;
         camera.position.x = 350;
         camera.position.y = 400;
-        viewport = new FitViewport(1200, 800, camera);
+        viewport = new FitViewport(200, 160, camera);
         viewport.apply();
 
         caveDungeonCreator = new CaveDungeonCreator(Tile.Rock, Tile.CaveBackground);

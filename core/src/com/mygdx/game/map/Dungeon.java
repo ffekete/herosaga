@@ -95,9 +95,15 @@ public class Dungeon {
     private TextureRegion getBackgroundTileTextureRegion(int x,
                                                          int y) {
 
-        // return full texture if it is not a tileset
+        // return part of the texture if it is not a tileset
         if (!backgroundMap[x][y].tileSet) {
-            return backgroundMap[x][y].mapToRegion(backgroundMap[x][y]);
+            TextureRegion textureRegion = backgroundMap[x][y].mapToRegion(backgroundMap[x][y]);
+
+            int xOffset = x % (textureRegion.getTexture().getWidth() / 16);
+            int yOffset = y % (textureRegion.getTexture().getHeight() / 16);
+
+            textureRegion.setRegion(xOffset * 16, yOffset * 16, 16, 16);
+            return textureRegion;
         }
 
         Tile actualTile = backgroundMap[x][y];
