@@ -14,14 +14,13 @@ import com.mygdx.game.map.CaveDungeonCreator;
 import com.mygdx.game.map.Dungeon;
 import com.mygdx.game.map.Tile;
 import com.mygdx.game.store.CameraStore;
+import com.mygdx.game.store.MapStore;
 
 public class DungeonCrawlerGame extends ApplicationAdapter {
 
     SpriteBatch batch;
     OrthographicCamera camera;
     Viewport viewport;
-    CaveDungeonCreator caveDungeonCreator;
-    Dungeon dungeon;
 
     @Override
     public void create() {
@@ -37,8 +36,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         viewport = new FitViewport(200, 160, camera);
         viewport.apply();
 
-        caveDungeonCreator = new CaveDungeonCreator(Tile.Rock, Tile.CaveBackground);
-        dungeon = caveDungeonCreator.create(6, 60, 40);
+        GameInitializer.I.init();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -65,7 +63,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                 }
 
                 if(keycode == Input.Keys.SPACE) {
-                    dungeon = caveDungeonCreator.create(6, 60, 40);
+                    GameInitializer.I.reGenerate();
                 }
 
                 return true;
@@ -81,7 +79,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         batch.begin();
         // draw here
 
-        dungeon.render(batch);
+        MapStore.I.dungeon.render(batch);
 
         batch.end();
     }
