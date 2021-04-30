@@ -2,6 +2,7 @@ package com.mygdx.game.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.character.CharacterAnimationRenderer;
 import com.mygdx.game.map.tiles.Adjacency;
 import com.mygdx.game.store.CameraStore;
 
@@ -57,6 +58,8 @@ public class Dungeon {
                 renderBackground(i, j, spriteBatch);
             }
         }
+
+        CharacterAnimationRenderer.I.render(spriteBatch);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {

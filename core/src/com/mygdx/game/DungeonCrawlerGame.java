@@ -4,16 +4,15 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.map.CaveDungeonCreator;
-import com.mygdx.game.map.Dungeon;
-import com.mygdx.game.map.Tile;
+import com.mygdx.game.character.Character;
+import com.mygdx.game.character.CharacterMovementHandler;
 import com.mygdx.game.store.CameraStore;
+import com.mygdx.game.store.CharacterStore;
 import com.mygdx.game.store.MapStore;
 
 public class DungeonCrawlerGame extends ApplicationAdapter {
@@ -43,27 +42,34 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
             @Override
             public boolean keyDown(int keycode) {
                 if (keycode == Input.Keys.LEFT) {
-                    camera.position.x -= 10f;
-                    camera.update();
+
+                    CharacterStore.I.player.direction = Character.Direction.Left;
+                    CharacterStore.I.player.state = Character.State.Running;
+                    CharacterMovementHandler.I.pxOffset = -1 * CharacterStore.I.player.getSpeed();
                 }
 
                 if (keycode == Input.Keys.RIGHT) {
-                    camera.position.x += 10f;
-                    camera.update();
+
+                    CharacterStore.I.player.direction = Character.Direction.Right;
+                    CharacterStore.I.player.state = Character.State.Running;
+                    CharacterMovementHandler.I.pxOffset = CharacterStore.I.player.getSpeed();
                 }
 
-                if (keycode == Input.Keys.UP) {
-                    camera.position.y += 10f;
-                    camera.update();
+                return true;
+            }
+
+            @Override
+            public boolean keyUp(int keycode) {
+                if (keycode == Input.Keys.LEFT) {
+
+                    CharacterStore.I.player.state = Character.State.Idle;
+                    CharacterMovementHandler.I.pxOffset = 0;
                 }
 
-                if (keycode == Input.Keys.DOWN) {
-                    camera.position.y -= 10f;
-                    camera.update();
-                }
+                if (keycode == Input.Keys.RIGHT) {
 
-                if(keycode == Input.Keys.SPACE) {
-                    GameInitializer.I.reGenerate();
+                    CharacterStore.I.player.state = Character.State.Idle;
+                    CharacterMovementHandler.I.pxOffset = 0;
                 }
 
                 return true;
@@ -78,6 +84,12 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         // draw here
+
+        CharacterMovementHandler.I.calculateCoords();
+
+        camera.position.x = CharacterStore.I.player.x;
+        camera.position.y = CharacterStore.I.player.y;
+        camera.update();
 
         MapStore.I.dungeon.render(batch);
 
