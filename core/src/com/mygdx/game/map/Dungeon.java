@@ -264,4 +264,20 @@ public class Dungeon {
             System.out.println();
         }
     }
+
+    public Tile getTileExactly(float px, float py) {
+        return getTile(((int)px) / 16,((int)py) / 16);
+    }
+
+    public Tile getTileBelow(float px, float py) {
+        return getTile(((int)px) / 16,((int)py-1) / 16);
+    }
+
+    public Tile getTileToLeft(float px, float py) {
+        return getTile(((int)px -1) / 16,((int)py) / 16);
+    }
+
+    public Tile getTileToRight(float px, float py) {
+        return getTile(((int)px + 1) / 16,((int)py) / 16);
+    }
 }

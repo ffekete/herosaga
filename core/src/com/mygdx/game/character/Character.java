@@ -25,7 +25,9 @@ public class Character {
 
     public enum State {
         Idle,
-        Running
+        Running,
+        Falling,
+        Squatting
     }
 
     public enum Class {

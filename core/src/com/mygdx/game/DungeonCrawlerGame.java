@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.character.Character;
+import com.mygdx.game.character.CharacterAnimationRenderer;
 import com.mygdx.game.character.CharacterMovementHandler;
+import com.mygdx.game.map.Dungeon;
 import com.mygdx.game.physics.PhysicsEngine;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
@@ -56,6 +58,19 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                     CharacterMovementHandler.I.pxOffsetLimit = CharacterStore.I.player.getSpeed();
                 }
 
+                if(keycode == Input.Keys.DOWN) {
+                    CharacterAnimationRenderer.I.resetAnimation(CharacterStore.I.player);
+                    CharacterStore.I.player.state = Character.State.Squatting;
+                }
+
+                if(keycode == Input.Keys.SPACE) {
+                    if(CharacterStore.I.player.state == Character.State.Squatting && (
+                            MapStore.I.dungeon.getTileBelow(CharacterStore.I.player.x + 8, CharacterStore.I.player.y).obstacleFromUp &&
+                                    !MapStore.I.dungeon.getTileBelow(CharacterStore.I.player.x + 8, CharacterStore.I.player.y).obstacleFromDown)) {
+                        CharacterStore.I.player.y -= 1f;
+                    }
+                }
+
                 return true;
             }
 
@@ -68,9 +83,13 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                 }
 
                 if (keycode == Input.Keys.RIGHT) {
-
                     CharacterStore.I.player.state = Character.State.Idle;
                     CharacterMovementHandler.I.pxOffsetLimit = 0;
+                }
+
+                if(keycode == Input.Keys.DOWN) {
+                    CharacterStore.I.player.state = Character.State.Idle;
+                    CharacterAnimationRenderer.I.resetAnimation(CharacterStore.I.player);
                 }
 
                 return true;

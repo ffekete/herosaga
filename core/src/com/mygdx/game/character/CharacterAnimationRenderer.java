@@ -14,33 +14,51 @@ public class CharacterAnimationRenderer {
 
     public static final CharacterAnimationRenderer I = new CharacterAnimationRenderer();
 
-    float stateTime = 0f;
-    Map<Character.Class, Animation<TextureRegion>> idleAnimation;
-    Map<Character.Class, Animation<TextureRegion>> runningAnimation;
+    Map<Character, Float> stateTimes;
+    Map<Character, Animation<TextureRegion>> idleAnimation;
+    Map<Character, Animation<TextureRegion>> runningAnimation;
+    Map<Character, Animation<TextureRegion>> fallingAnimation;
+    Map<Character, Animation<TextureRegion>> squattingAnimation;
 
     public CharacterAnimationRenderer() {
 
+        this.stateTimes = new HashMap<>();
+
         this.idleAnimation = new HashMap<>();
         this.runningAnimation = new HashMap<>();
-
-        // rogue
-        TextureRegion[][] regions = TextureRegion.split(new Texture(Gdx.files.internal("Rogue-Idle.png")), 16 ,16);
-        this.idleAnimation.put(Character.Class.Rogue, new Animation<>(1f, regions[0]));
-
-        regions = TextureRegion.split(new Texture(Gdx.files.internal("Rogue-Running.png")), 16 ,16);
-        this.runningAnimation.put(Character.Class.Rogue, new Animation<>(0.1f, regions[0]));
+        this.fallingAnimation = new HashMap<>();
+        this.squattingAnimation = new HashMap<>();
 
         // others
+    }
+
+    public void addAnimations(Character character) {
+
+        String fileName = "Rogue";
+
+        this.stateTimes.put(character, 0f);
+
+        TextureRegion[][] regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Idle.png")), 16 ,16);
+        this.idleAnimation.put(character, new Animation<>(1f, regions[0]));
+
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Running.png")), 16 ,16);
+        this.runningAnimation.put(character, new Animation<>(0.1f, regions[0]));
+
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Falling.png")), 16 ,16);
+        this.fallingAnimation.put(character, new Animation<>(0.3f, regions[0]));
+
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Squatting.png")), 16 ,16);
+        this.squattingAnimation.put(character, new Animation<>(0.1f, regions[0]));
     }
 
     public void render(SpriteBatch batch) {
         Character player = CharacterStore.I.player;
 
-        stateTime += Gdx.graphics.getDeltaTime();
+        this.stateTimes.put(player, this.stateTimes.get(player) + Gdx.graphics.getDeltaTime());
 
         switch (player.state) {
             case Idle:
-                TextureRegion idleTextureRegion = idleAnimation.get(player.aClass).getKeyFrame(stateTime, true);
+                TextureRegion idleTextureRegion = idleAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
 
                 if(player.direction == Character.Direction.Left) {
 
@@ -55,7 +73,7 @@ public class CharacterAnimationRenderer {
                 batch.draw(idleTextureRegion, player.x, player.y);
                 break;
             case Running:
-                TextureRegion runningTextureRegion = runningAnimation.get(player.aClass).getKeyFrame(stateTime, true);
+                TextureRegion runningTextureRegion = runningAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
                 if(player.direction == Character.Direction.Left) {
                     if(!runningTextureRegion.isFlipX()) {
                         runningTextureRegion.flip(true, false);
@@ -67,7 +85,20 @@ public class CharacterAnimationRenderer {
                 }
                 batch.draw(runningTextureRegion, player.x, player.y);
                 break;
+
+            case Falling:
+                TextureRegion fallingTextureRegion = fallingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
+                batch.draw(fallingTextureRegion, player.x, player.y);
+                break;
+
+            case Squatting:
+                TextureRegion sqattingTextureRegion = squattingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
+                batch.draw(sqattingTextureRegion, player.x, player.y);
+                break;
         }
     }
 
+    public void resetAnimation(Character player) {
+        stateTimes.put(player, 0f);
+    }
 }
