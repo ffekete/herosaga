@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.character.Character;
 import com.mygdx.game.character.CharacterMovementHandler;
+import com.mygdx.game.physics.PhysicsEngine;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
 import com.mygdx.game.store.MapStore;
@@ -45,14 +46,14 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
                     CharacterStore.I.player.direction = Character.Direction.Left;
                     CharacterStore.I.player.state = Character.State.Running;
-                    CharacterMovementHandler.I.pxOffset = -1 * CharacterStore.I.player.getSpeed();
+                    CharacterMovementHandler.I.pxOffsetLimit = -1 * CharacterStore.I.player.getSpeed();
                 }
 
                 if (keycode == Input.Keys.RIGHT) {
 
                     CharacterStore.I.player.direction = Character.Direction.Right;
                     CharacterStore.I.player.state = Character.State.Running;
-                    CharacterMovementHandler.I.pxOffset = CharacterStore.I.player.getSpeed();
+                    CharacterMovementHandler.I.pxOffsetLimit = CharacterStore.I.player.getSpeed();
                 }
 
                 return true;
@@ -63,13 +64,13 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                 if (keycode == Input.Keys.LEFT) {
 
                     CharacterStore.I.player.state = Character.State.Idle;
-                    CharacterMovementHandler.I.pxOffset = 0;
+                    CharacterMovementHandler.I.pxOffsetLimit = 0;
                 }
 
                 if (keycode == Input.Keys.RIGHT) {
 
                     CharacterStore.I.player.state = Character.State.Idle;
-                    CharacterMovementHandler.I.pxOffset = 0;
+                    CharacterMovementHandler.I.pxOffsetLimit = 0;
                 }
 
                 return true;
@@ -84,6 +85,8 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         // draw here
+
+        PhysicsEngine.step();
 
         CharacterMovementHandler.I.calculateCoords();
 

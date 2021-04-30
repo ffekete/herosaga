@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.character.Character;
 import com.mygdx.game.map.CaveDungeonCreator;
-import com.mygdx.game.map.Dungeon;
 import com.mygdx.game.map.Tile;
 import com.mygdx.game.map.service.DungeonSpaceSpotter;
 import com.mygdx.game.store.CameraStore;

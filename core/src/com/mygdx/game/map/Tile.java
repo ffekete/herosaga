@@ -6,17 +6,23 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public enum Tile {
 
-    None(false),
-    Grass(true),
-    Rock(true),
-    CaveBackground(false),
-    WoodenPlatform(false),
-    Ladder(false);
+    None(false, false, false, false),
+    Grass(true, true, true, true),
+    Rock(true, true, true, true),
+    CaveBackground(false, false, false, false),
+    WoodenPlatform(false, false, true, false),
+    Ladder(false, false, false, false);
 
     boolean tileSet;
+    public boolean obstacleFromSide;
+    public boolean obstacleFromUp;
+    public boolean obstacleFromDown;
 
-    Tile(boolean tileSet) {
+    Tile(boolean tileSet, boolean obstacleFromSide, boolean obstacleFromUp, boolean obstacleFromDown) {
         this.tileSet = tileSet;
+        this.obstacleFromSide = obstacleFromSide;
+        this.obstacleFromUp = obstacleFromUp;
+        this.obstacleFromDown = obstacleFromDown;
     }
 
     private TextureRegion woodenPlatformRegion = new TextureRegion(new Texture(Gdx.files.internal("WoodenPlatform.png")));

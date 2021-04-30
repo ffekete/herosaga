@@ -46,6 +46,7 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api group: 'com.badlogicgames.gdx', name: 'gdx-box2d-platform', classifier: 'natives-desktop', version: '1.10.0'
         
     }
 }
@@ -58,6 +59,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        
+        api group: 'com.badlogicgames.gdx', name: 'gdx-box2d', version: '1.10.0'
+
     }
 }
