@@ -2,7 +2,9 @@ package com.mygdx.game.stage.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.game.character.Character;
+import com.mygdx.game.character.CharacterAnimationRenderer;
 import com.mygdx.game.map.Dungeon;
+import com.mygdx.game.store.CharacterStore;
 import com.mygdx.game.store.MapStore;
 
 public class GravityAction extends Action {
@@ -35,6 +37,11 @@ public class GravityAction extends Action {
 
             if(MapStore.I.dungeon.getTileBelow(px, py, actualPyOffset).obstacleFromUp) {
                 character.y = ((py) / 16) * 16;
+
+                if(actualPyOffset > 0) {
+                    character.addAction(new LandingAction(character));
+                }
+
                 actualPyOffset = 0; // stop falling
             } else {
                 character.y -= actualPyOffset;
@@ -53,6 +60,9 @@ public class GravityAction extends Action {
         float py = character.y;
 
         if (dungeon.getTileBelow(px, py, 1).obstacleFromUp) {
+            if(actualPyOffset > 0) {
+                character.addAction(new LandingAction(character));
+            }
             actualPyOffset = 0;
 
         } else {

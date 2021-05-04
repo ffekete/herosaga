@@ -19,6 +19,7 @@ public class CharacterAnimationRenderer {
     Map<Character, Animation<TextureRegion>> runningAnimation;
     Map<Character, Animation<TextureRegion>> fallingAnimation;
     Map<Character, Animation<TextureRegion>> squattingAnimation;
+    Map<Character, Animation<TextureRegion>> landingAnimation;
 
     public CharacterAnimationRenderer() {
 
@@ -28,6 +29,7 @@ public class CharacterAnimationRenderer {
         this.runningAnimation = new HashMap<>();
         this.fallingAnimation = new HashMap<>();
         this.squattingAnimation = new HashMap<>();
+        this.landingAnimation = new HashMap<>();
 
         // others
     }
@@ -49,6 +51,9 @@ public class CharacterAnimationRenderer {
 
         regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Squatting.png")), 16, 16);
         this.squattingAnimation.put(character, new Animation<>(0.1f, regions[0]));
+
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Landing.png")), 16, 16);
+        this.landingAnimation.put(character, new Animation<>(0.1f, regions[0]));
     }
 
     public void render(SpriteBatch batch) {
@@ -56,7 +61,9 @@ public class CharacterAnimationRenderer {
 
         this.stateTimes.put(player, this.stateTimes.get(player) + Gdx.graphics.getDeltaTime());
 
-        switch (player.state) {
+        Character.State state = player.overrideState != null ? player.overrideState : player.state;
+
+        switch (state) {
             case Idle:
                 TextureRegion idleTextureRegion = idleAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
 
@@ -87,7 +94,6 @@ public class CharacterAnimationRenderer {
                 break;
 
             case Falling:
-            case FallThrough:
                 TextureRegion fallingTextureRegion = fallingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
                 batch.draw(fallingTextureRegion, player.x, player.y);
                 break;
@@ -95,6 +101,22 @@ public class CharacterAnimationRenderer {
             case Squatting:
                 TextureRegion sqattingTextureRegion = squattingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
                 batch.draw(sqattingTextureRegion, player.x, player.y);
+                break;
+
+            case Landing:
+                TextureRegion landingTextureRegion = landingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
+
+                if (player.direction == Character.Direction.Left) {
+                    if (!landingTextureRegion.isFlipX()) {
+                        landingTextureRegion.flip(true, false);
+                    }
+                } else {
+                    if (landingTextureRegion.isFlipX()) {
+                        landingTextureRegion.flip(true, false);
+                    }
+                }
+
+                batch.draw(landingTextureRegion, player.x, player.y);
                 break;
         }
     }

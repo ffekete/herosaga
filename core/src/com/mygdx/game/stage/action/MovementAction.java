@@ -28,6 +28,10 @@ public class MovementAction extends Action {
     @Override
     public boolean act(float v) {
 
+        if(character.overrideState != null) {
+            return false; // nothing to do yet, let's wait staggered to be over
+        }
+
         if((character.direction != direction || character.state != Character.State.Running) && actualPxOffset != 0 && actualPxOffset != 0) {
             pxOffsetLimit = 0;
         }

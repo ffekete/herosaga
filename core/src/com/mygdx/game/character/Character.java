@@ -6,7 +6,10 @@ public class Character extends Actor {
 
     public float x;
     public float y;
+
     public State state = State.Idle;
+    public State overrideState = null;
+
     public Class aClass;
     public Direction direction = Direction.Right;
 
@@ -30,7 +33,7 @@ public class Character extends Actor {
         Running,
         Falling,
         Squatting,
-        FallThrough
+        Landing
     }
 
     public enum Class {
