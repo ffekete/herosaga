@@ -28,7 +28,7 @@ public class Character extends Actor {
         this.jumpHeight = aClass.jumpHeight;
     }
 
-    public float getSpeed() {
+    public float getMaxRunningSpeed() {
         return speed; // add modifiers later
     }
 
@@ -62,11 +62,5 @@ public class Character extends Actor {
     public enum Direction {
         Left,
         Right
-    }
-
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-        System.out.println(getActions().size);
     }
 }

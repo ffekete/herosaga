@@ -11,7 +11,6 @@ public class MovementAction extends Action {
     private Character character;
     private static final float INDUCTION = 0.03f;
 
-    public float pxOffsetLimit = 0;
     public float actualPxOffset = 0;
     private float update = 0f;
 
@@ -21,7 +20,6 @@ public class MovementAction extends Action {
                           float pxOffsetLimit) {
         this.character = character;
         this.character.direction = direction;
-        this.pxOffsetLimit = pxOffsetLimit;
         this.direction = direction;
     }
 
@@ -29,11 +27,11 @@ public class MovementAction extends Action {
     public boolean act(float v) {
 
         if(character.overrideState != null) {
-            return false; // nothing to do yet, let's wait staggered to be over
+            return false; // nothing to do yet, let's wait staggered / jumping / etc... to be over
         }
 
-        if((character.direction != direction || character.state != Character.State.Running) && actualPxOffset != 0 && actualPxOffset != 0) {
-            pxOffsetLimit = 0;
+        if((character.direction != direction || character.state != Character.State.Running) && actualPxOffset != 0) {
+            character.runningSpeed = 0;
         }
 
         if((character.direction != direction || character.state != Character.State.Running) && actualPxOffset == 0) {
@@ -46,7 +44,23 @@ public class MovementAction extends Action {
 
             calculateOffsets();
 
-            character.x += actualPxOffset;
+            System.out.println(actualPxOffset);
+
+            if(character.direction == Character.Direction.Left) {
+                if(MapStore.I.dungeon.getTileToLeft(character.x + 8, character.y, Math.abs(actualPxOffset)).obstacleFromSide) {
+                    character.x =(character.x / 16) * 16;
+                } else {
+                    character.x += actualPxOffset;
+                }
+            } else if(character.direction == Character.Direction.Right) {
+                if(MapStore.I.dungeon.getTileToRight(character.x + 8, character.y, Math.abs(actualPxOffset)).obstacleFromSide) {
+                    character.x =(character.x / 16) * 16;
+                } else {
+                    character.x += actualPxOffset;
+                }
+            }
+
+
             update = 0f;
         }
 
@@ -59,44 +73,48 @@ public class MovementAction extends Action {
         float px = character.x + 8f;
         float py = character.y;
 
+        // if blocked to the left, stop immediately
         if (character.direction == Character.Direction.Left) {
-            if (dungeon.getTileToLeft(px, py).obstacleFromSide) {
-                pxOffsetLimit = 0;
+            if (dungeon.getTileToLeft(px, py, Math.abs(actualPxOffset)).obstacleFromSide) {
+                character.runningSpeed = 0;
+                actualPxOffset = 0;
+            }
+        }
+
+        // if blocked to the right, stop immediately
+        if (character.direction == Character.Direction.Right) {
+            if (dungeon.getTileToRight(px, py, Math.abs(actualPxOffset)).obstacleFromSide) {
+                character.runningSpeed = 0;
                 actualPxOffset = 0;
             }
         }
 
         if (character.direction == Character.Direction.Right) {
-            if (dungeon.getTileToRight(px, py).obstacleFromSide) {
-                pxOffsetLimit = 0;
-                actualPxOffset = 0;
-            }
-        }
-
-        if (character.direction == Character.Direction.Right) {
-            if (pxOffsetLimit == 0 && actualPxOffset > 0) {
+            // ramp down speed if needed
+            if (character.runningSpeed == 0 && actualPxOffset > 0) {
                 actualPxOffset -= INDUCTION;
                 if (actualPxOffset < 0) {
-                    pxOffsetLimit = 0;
+                    character.runningSpeed = 0;
                     actualPxOffset = 0;
                 }
             }
 
-            if (pxOffsetLimit > actualPxOffset) {
+            if (character.runningSpeed > actualPxOffset) {
                 actualPxOffset += INDUCTION;
             }
 
         } else {
-            if (pxOffsetLimit == 0 && actualPxOffset < 0) {
+            // ramp down speed if needed
+            if (character.runningSpeed == 0 && actualPxOffset < 0) {
                 actualPxOffset += INDUCTION;
                 if (actualPxOffset > 0) {
-                    pxOffsetLimit = 0;
+                    character.runningSpeed = 0;
                     actualPxOffset = 0;
 
                 }
             }
 
-            if (pxOffsetLimit < actualPxOffset) {
+            if (character.runningSpeed < actualPxOffset) {
                 actualPxOffset -= INDUCTION;
             }
         }

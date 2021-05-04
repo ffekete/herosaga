@@ -5,79 +5,46 @@ import com.mygdx.game.character.Character;
 import com.mygdx.game.map.Dungeon;
 import com.mygdx.game.store.MapStore;
 
-public class JumpingAction extends Action {
+public class HorizontalGravityAction extends Action {
 
     private Character character;
     private static final float INDUCTION = 0.1f;
 
-    public float pyOffsetLimit = 0;
     public float pxOffsetLimit = 0;
-    public float actualPyOffset = 0;
     public float actualPxOffset = 0;
     private float update = 0f;
-    private float height;
 
 
-    public JumpingAction(Character character,
-                         float pyOffsetLimit,
-                         float pxOffsetLimit) {
+    public HorizontalGravityAction(Character character) {
         this.character = character;
-        this.pyOffsetLimit = pyOffsetLimit;
-        this.pxOffsetLimit = pxOffsetLimit;
-        this.height = character.getJumpHeight();
     }
 
     @Override
     public boolean act(float v) {
 
-        if(height <= 0) {
-            character.overrideState = null;
-            return true;
-        }
-
         update += v;
 
         if (update >= 0.005f) {
 
-            height -= 0.5f;
+            if (character.overrideState == Character.State.Jumping) {
+                pxOffsetLimit = character.getMaxRunningSpeed();
+                calculateHorizontalOffsets();
 
-            calculateVerticalOffsets();
-            calculateHorizontalOffsets();
+                float px = character.x + 8f;
+                float py = character.y;
 
-            float px = character.x + 8f;
-            float py = character.y;
-
-            if(MapStore.I.dungeon.getTileAbove(px, py, actualPyOffset).obstacleFromDown) {
-                character.y = ((py) / 16) * 16 + 15;
-                actualPyOffset = 0; // stop jump
-                character.overrideState = null;
-            } else {
-                character.y += actualPyOffset;
-                character.x += actualPxOffset;
+                if (MapStore.I.dungeon.getTileToRight(px, py, actualPxOffset).obstacleFromSide) {
+                    character.x = ((px) / 16) * 16;
+                    character.runningSpeed = 0f;
+                } else {
+                    character.x += actualPxOffset;
+                }
+                update = 0;
+                return false; // jumping, nothing to do here
             }
-
-            update = 0f;
         }
 
         return false;
-    }
-
-    void calculateVerticalOffsets() {
-        Dungeon dungeon = MapStore.I.dungeon;
-
-        float px = character.x + 8f;
-        float py = character.y;
-
-        if (dungeon.getTileAbove(px, py, 1).obstacleFromDown) {
-            actualPyOffset = 0;
-            character.overrideState = null;
-        } else {
-            actualPyOffset += INDUCTION;
-
-            if (pyOffsetLimit > actualPyOffset) {
-                actualPyOffset = pyOffsetLimit;
-            }
-        }
     }
 
     void calculateHorizontalOffsets() {

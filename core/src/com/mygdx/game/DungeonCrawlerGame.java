@@ -4,14 +4,12 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -65,12 +63,12 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
                 if (keycode == Input.Keys.LEFT) {
 
-                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Left, -1f * CharacterStore.I.player.getSpeed()));
+                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Left, -1f * CharacterStore.I.player.getMaxRunningSpeed()));
                     CharacterStore.I.player.state = Character.State.Running;
                 }
 
                 if (keycode == Input.Keys.RIGHT) {
-                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Right, CharacterStore.I.player.getSpeed()));
+                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Right, CharacterStore.I.player.getMaxRunningSpeed()));
                     CharacterStore.I.player.state = Character.State.Running;
                 }
 
@@ -132,8 +130,9 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         batch.end();
 
         shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.begin();
-        shapeRenderer.rect(10, 10, 10 + CharacterStore.I.player.runningSpeed, 11);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(100, 10, 100 + CharacterStore.I.player.runningSpeed *  100, 11);
         shapeRenderer.end();
     }
 

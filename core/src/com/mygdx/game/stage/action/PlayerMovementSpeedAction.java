@@ -7,18 +7,19 @@ import com.mygdx.game.store.CharacterStore;
 
 public class PlayerMovementSpeedAction extends Action {
 
-    float duration = 0.5f;
+    private static final float RUNNING_SPEED_INCREASE_STEP = 0.1f;
+    float duration = 0.05f;
 
     @Override
     public boolean act(float delta) {
 
         duration += delta;
 
-        if (duration >= 0.005f) {
+        if (duration >= 0.10f) {
 
             if(!Gdx.input.isKeyPressed(Input.Keys.LEFT) && !Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 if(CharacterStore.I.player.runningSpeed > 0) {
-                    CharacterStore.I.player.runningSpeed -= 0.5f;
+                    CharacterStore.I.player.runningSpeed -= RUNNING_SPEED_INCREASE_STEP;
 
                     if(CharacterStore.I.player.runningSpeed < 0) {
                         CharacterStore.I.player.runningSpeed = 0f;
@@ -26,7 +27,7 @@ public class PlayerMovementSpeedAction extends Action {
                 }
 
                 if(CharacterStore.I.player.runningSpeed < 0) {
-                    CharacterStore.I.player.runningSpeed += 0.5f;
+                    CharacterStore.I.player.runningSpeed += RUNNING_SPEED_INCREASE_STEP;
 
                     if(CharacterStore.I.player.runningSpeed > 0) {
                         CharacterStore.I.player.runningSpeed = 0f;
@@ -40,9 +41,9 @@ public class PlayerMovementSpeedAction extends Action {
                     CharacterStore.I.player.runningSpeed = 0;
                 }
 
-                CharacterStore.I.player.runningSpeed -= 0.5f;
-                if (CharacterStore.I.player.runningSpeed < -2f) {
-                    CharacterStore.I.player.runningSpeed = -2f;
+                CharacterStore.I.player.runningSpeed -= RUNNING_SPEED_INCREASE_STEP;
+                if (CharacterStore.I.player.runningSpeed < -1 * CharacterStore.I.player.getMaxRunningSpeed()) {
+                    CharacterStore.I.player.runningSpeed = -1 * CharacterStore.I.player.getMaxRunningSpeed();
                 }
             }
 
@@ -53,9 +54,9 @@ public class PlayerMovementSpeedAction extends Action {
                     CharacterStore.I.player.runningSpeed = 0;
                 }
 
-                CharacterStore.I.player.runningSpeed += 0.5f;
-                if (CharacterStore.I.player.runningSpeed > 2f) {
-                    CharacterStore.I.player.runningSpeed = 2f;
+                CharacterStore.I.player.runningSpeed += RUNNING_SPEED_INCREASE_STEP;
+                if (CharacterStore.I.player.runningSpeed > CharacterStore.I.player.getMaxRunningSpeed()) {
+                    CharacterStore.I.player.runningSpeed = CharacterStore.I.player.getMaxRunningSpeed();
                 }
             }
 

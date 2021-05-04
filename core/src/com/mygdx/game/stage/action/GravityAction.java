@@ -12,8 +12,6 @@ public class GravityAction extends Action {
 
     public float pyOffsetLimit = 0;
     public float actualPyOffset = 0;
-    public float pxOffsetLimit = 0;
-    public float actualPxOffset = 0;
     private float update = 0f;
 
 
@@ -31,9 +29,6 @@ public class GravityAction extends Action {
         if (update >= 0.005f) {
 
             if (character.overrideState == Character.State.Jumping) {
-                pxOffsetLimit = character.runningSpeed;
-                calculateHorizontalOffsets();
-                character.x += actualPxOffset;
                 update = 0;
                 return false; // jumping, nothing to do here
             }
@@ -78,55 +73,6 @@ public class GravityAction extends Action {
 
             if (pyOffsetLimit > actualPyOffset) {
                 actualPyOffset = pyOffsetLimit;
-            }
-        }
-    }
-
-    void calculateHorizontalOffsets() {
-        Dungeon dungeon = MapStore.I.dungeon;
-
-        float px = character.x + 8f;
-        float py = character.y;
-
-        if (character.direction == Character.Direction.Left) {
-            if (dungeon.getTileToLeft(px, py).obstacleFromSide) {
-                pxOffsetLimit = 0;
-                actualPxOffset = 0;
-            }
-        }
-
-        if (character.direction == Character.Direction.Right) {
-            if (dungeon.getTileToRight(px, py).obstacleFromSide) {
-                pxOffsetLimit = 0;
-                actualPxOffset = 0;
-            }
-        }
-
-        if (character.direction == Character.Direction.Right) {
-            if (pxOffsetLimit == 0 && actualPxOffset > 0) {
-                actualPxOffset -= INDUCTION;
-                if (actualPxOffset < 0) {
-                    pxOffsetLimit = 0;
-                    actualPxOffset = 0;
-                }
-            }
-
-            if (pxOffsetLimit > actualPxOffset) {
-                actualPxOffset += INDUCTION;
-            }
-
-        } else {
-            if (pxOffsetLimit == 0 && actualPxOffset < 0) {
-                actualPxOffset += INDUCTION;
-                if (actualPxOffset > 0) {
-                    pxOffsetLimit = 0;
-                    actualPxOffset = 0;
-
-                }
-            }
-
-            if (pxOffsetLimit < actualPxOffset) {
-                actualPxOffset -= INDUCTION;
             }
         }
     }
