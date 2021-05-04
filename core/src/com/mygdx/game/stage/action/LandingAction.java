@@ -21,7 +21,6 @@ public class LandingAction extends TemporalAction {
     protected void update(float percent) {
         if (percent >= 0.95f) {
             this.character.overrideState = null;
-
         }
     }
 }

@@ -5,54 +5,55 @@ import com.mygdx.game.character.Character;
 import com.mygdx.game.map.Dungeon;
 import com.mygdx.game.store.MapStore;
 
-public class GravityAction extends Action {
+public class JumpingAction extends Action {
 
     private Character character;
     private static final float INDUCTION = 0.1f;
 
     public float pyOffsetLimit = 0;
-    public float actualPyOffset = 0;
     public float pxOffsetLimit = 0;
+    public float actualPyOffset = 0;
     public float actualPxOffset = 0;
     private float update = 0f;
+    private float height;
 
 
-    public GravityAction(Character character,
-                         float pyOffsetLimit) {
+    public JumpingAction(Character character,
+                         float pyOffsetLimit,
+                         float pxOffsetLimit) {
         this.character = character;
         this.pyOffsetLimit = pyOffsetLimit;
+        this.pxOffsetLimit = pxOffsetLimit;
+        this.height = character.getJumpHeight();
     }
 
     @Override
     public boolean act(float v) {
 
+        if(height <= 0) {
+            character.overrideState = null;
+            return true;
+        }
+
         update += v;
 
         if (update >= 0.005f) {
 
-            if (character.overrideState == Character.State.Jumping) {
-                pxOffsetLimit = character.runningSpeed;
-                calculateHorizontalOffsets();
-                character.x += actualPxOffset;
-                update = 0;
-                return false; // jumping, nothing to do here
-            }
+            height -= 0.5f;
 
-            calculateOffsets();
+            calculateVerticalOffsets();
+            calculateHorizontalOffsets();
 
             float px = character.x + 8f;
             float py = character.y;
 
-            if (MapStore.I.dungeon.getTileBelow(px, py, actualPyOffset).obstacleFromUp) {
-                character.y = ((py) / 16) * 16;
-
-                if (actualPyOffset > 0) {
-                    character.addAction(new LandingAction(character));
-                }
-
-                actualPyOffset = 0; // stop falling
+            if(MapStore.I.dungeon.getTileAbove(px, py, actualPyOffset).obstacleFromDown) {
+                character.y = ((py) / 16) * 16 + 15;
+                actualPyOffset = 0; // stop jump
+                character.overrideState = null;
             } else {
-                character.y -= actualPyOffset;
+                character.y += actualPyOffset;
+                character.x += actualPxOffset;
             }
 
             update = 0f;
@@ -61,18 +62,15 @@ public class GravityAction extends Action {
         return false;
     }
 
-    void calculateOffsets() {
+    void calculateVerticalOffsets() {
         Dungeon dungeon = MapStore.I.dungeon;
 
         float px = character.x + 8f;
         float py = character.y;
 
-        if (dungeon.getTileBelow(px, py, 1).obstacleFromUp) {
-            if (actualPyOffset > 0) {
-                character.addAction(new LandingAction(character));
-            }
+        if (dungeon.getTileAbove(px, py, 1).obstacleFromDown) {
             actualPyOffset = 0;
-
+            character.overrideState = null;
         } else {
             actualPyOffset += INDUCTION;
 

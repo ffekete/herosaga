@@ -7,20 +7,25 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.character.Character;
 import com.mygdx.game.character.CharacterAnimationRenderer;
-import com.mygdx.game.stage.action.GravityAction;
-import com.mygdx.game.stage.action.MovementAction;
+import com.mygdx.game.stage.action.*;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
 import com.mygdx.game.store.MapStore;
 
 public class DungeonCrawlerGame extends ApplicationAdapter {
 
+
+    ShapeRenderer shapeRenderer;
     SpriteBatch batch;
     OrthographicCamera camera;
     Viewport viewport;
@@ -35,6 +40,8 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         camera = new OrthographicCamera();
         CameraStore.I.orthographicCamera = camera;
 
+        shapeRenderer = new ShapeRenderer();
+
         camera.zoom = 1f;
         camera.position.x = 350;
         camera.position.y = 400;
@@ -44,6 +51,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         GameInitializer.I.init();
 
         CharacterStore.I.player.addAction(new GravityAction(CharacterStore.I.player, 1f));
+        CharacterStore.I.player.addAction(new PlayerMovementSpeedAction());
         stage.addActor(CharacterStore.I.player);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -69,6 +77,17 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                 if (keycode == Input.Keys.DOWN) {
                     CharacterAnimationRenderer.I.resetAnimation(CharacterStore.I.player);
                     CharacterStore.I.player.state = Character.State.Squatting;
+                }
+
+                if (keycode == Input.Keys.SPACE) {
+                    CharacterAnimationRenderer.I.resetAnimation(CharacterStore.I.player);
+                    CharacterStore.I.player.overrideState = Character.State.JumpingAnticipation;
+
+                    SequenceAction action = new SequenceAction();
+                    action.addAction(new JumpingAnticipationAction(0.3f, CharacterStore.I.player));
+                    action.addAction(new JumpingAction(CharacterStore.I.player, 1f, CharacterStore.I.player.runningSpeed * 5));
+
+                    CharacterStore.I.player.addAction(action);
                 }
 
                 return true;
@@ -111,6 +130,11 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         MapStore.I.dungeon.render(batch);
 
         batch.end();
+
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.begin();
+        shapeRenderer.rect(10, 10, 10 + CharacterStore.I.player.runningSpeed, 11);
+        shapeRenderer.end();
     }
 
     @Override

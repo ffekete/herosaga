@@ -20,6 +20,8 @@ public class CharacterAnimationRenderer {
     Map<Character, Animation<TextureRegion>> fallingAnimation;
     Map<Character, Animation<TextureRegion>> squattingAnimation;
     Map<Character, Animation<TextureRegion>> landingAnimation;
+    Map<Character, Animation<TextureRegion>> jumpingAnimation;
+    Map<Character, Animation<TextureRegion>> jumpingAnticipationAnimation;
 
     public CharacterAnimationRenderer() {
 
@@ -30,6 +32,8 @@ public class CharacterAnimationRenderer {
         this.fallingAnimation = new HashMap<>();
         this.squattingAnimation = new HashMap<>();
         this.landingAnimation = new HashMap<>();
+        this.jumpingAnimation = new HashMap<>();
+        this.jumpingAnticipationAnimation = new HashMap<>();
 
         // others
     }
@@ -54,6 +58,12 @@ public class CharacterAnimationRenderer {
 
         regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Landing.png")), 16, 16);
         this.landingAnimation.put(character, new Animation<>(0.1f, regions[0]));
+
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Jumping.png")), 16, 16);
+        this.jumpingAnimation.put(character, new Animation<>(0.1f, regions[0]));
+
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-JumpingAnticipation.png")), 16, 16);
+        this.jumpingAnticipationAnimation.put(character, new Animation<>(0.05f, regions[0]));
     }
 
     public void render(SpriteBatch batch) {
@@ -117,6 +127,38 @@ public class CharacterAnimationRenderer {
                 }
 
                 batch.draw(landingTextureRegion, player.x, player.y);
+                break;
+
+            case JumpingAnticipation:
+                TextureRegion jumpingAnticipationTextureRegion = jumpingAnticipationAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
+
+                if (player.direction == Character.Direction.Left) {
+                    if (!jumpingAnticipationTextureRegion.isFlipX()) {
+                        jumpingAnticipationTextureRegion.flip(true, false);
+                    }
+                } else {
+                    if (jumpingAnticipationTextureRegion.isFlipX()) {
+                        jumpingAnticipationTextureRegion.flip(true, false);
+                    }
+                }
+
+                batch.draw(jumpingAnticipationTextureRegion, player.x, player.y);
+                break;
+
+            case Jumping:
+                TextureRegion jumpingTextureRegion = jumpingAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
+
+                if (player.direction == Character.Direction.Left) {
+                    if (!jumpingTextureRegion.isFlipX()) {
+                        jumpingTextureRegion.flip(true, false);
+                    }
+                } else {
+                    if (jumpingTextureRegion.isFlipX()) {
+                        jumpingTextureRegion.flip(true, false);
+                    }
+                }
+
+                batch.draw(jumpingTextureRegion, player.x, player.y);
                 break;
         }
     }
