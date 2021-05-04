@@ -7,13 +7,13 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.character.Character;
 import com.mygdx.game.character.CharacterAnimationRenderer;
-import com.mygdx.game.character.CharacterMovementHandler;
-import com.mygdx.game.map.Dungeon;
-import com.mygdx.game.physics.PhysicsEngine;
+import com.mygdx.game.stage.action.GravityAction;
+import com.mygdx.game.stage.action.MovementAction;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
 import com.mygdx.game.store.MapStore;
@@ -23,10 +23,12 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
     SpriteBatch batch;
     OrthographicCamera camera;
     Viewport viewport;
+    Stage stage;
 
     @Override
     public void create() {
 
+        stage = new Stage();
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
@@ -40,35 +42,32 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
         GameInitializer.I.init();
 
+        CharacterStore.I.player.addAction(new GravityAction(CharacterStore.I.player, 1f));
+        stage.addActor(CharacterStore.I.player);
+
         Gdx.input.setInputProcessor(new InputAdapter() {
 
             @Override
             public boolean keyDown(int keycode) {
+
+                if (keycode == Input.Keys.UP) {
+                    CharacterStore.I.player.y += 32;
+                }
+
                 if (keycode == Input.Keys.LEFT) {
 
-                    CharacterStore.I.player.direction = Character.Direction.Left;
+                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Left, -1f * CharacterStore.I.player.getSpeed()));
                     CharacterStore.I.player.state = Character.State.Running;
-                    CharacterMovementHandler.I.pxOffsetLimit = -1 * CharacterStore.I.player.getSpeed();
                 }
 
                 if (keycode == Input.Keys.RIGHT) {
-
-                    CharacterStore.I.player.direction = Character.Direction.Right;
+                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Right, CharacterStore.I.player.getSpeed()));
                     CharacterStore.I.player.state = Character.State.Running;
-                    CharacterMovementHandler.I.pxOffsetLimit = CharacterStore.I.player.getSpeed();
                 }
 
-                if(keycode == Input.Keys.DOWN) {
+                if (keycode == Input.Keys.DOWN) {
                     CharacterAnimationRenderer.I.resetAnimation(CharacterStore.I.player);
                     CharacterStore.I.player.state = Character.State.Squatting;
-                }
-
-                if(keycode == Input.Keys.SPACE) {
-                    if(CharacterStore.I.player.state == Character.State.Squatting && (
-                            MapStore.I.dungeon.getTileBelow(CharacterStore.I.player.x + 8, CharacterStore.I.player.y).obstacleFromUp &&
-                                    !MapStore.I.dungeon.getTileBelow(CharacterStore.I.player.x + 8, CharacterStore.I.player.y).obstacleFromDown)) {
-                        CharacterStore.I.player.y -= 1f;
-                    }
                 }
 
                 return true;
@@ -76,18 +75,15 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
             @Override
             public boolean keyUp(int keycode) {
-                if (keycode == Input.Keys.LEFT) {
-
+                if (keycode == Input.Keys.LEFT && !Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                     CharacterStore.I.player.state = Character.State.Idle;
-                    CharacterMovementHandler.I.pxOffsetLimit = 0;
                 }
 
-                if (keycode == Input.Keys.RIGHT) {
+                if (keycode == Input.Keys.RIGHT && !Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                     CharacterStore.I.player.state = Character.State.Idle;
-                    CharacterMovementHandler.I.pxOffsetLimit = 0;
                 }
 
-                if(keycode == Input.Keys.DOWN) {
+                if (keycode == Input.Keys.DOWN) {
                     CharacterStore.I.player.state = Character.State.Idle;
                     CharacterAnimationRenderer.I.resetAnimation(CharacterStore.I.player);
                 }
@@ -105,9 +101,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         batch.begin();
         // draw here
 
-        PhysicsEngine.step();
-
-        CharacterMovementHandler.I.calculateCoords();
+        stage.act();
 
         camera.position.x = CharacterStore.I.player.x;
         camera.position.y = CharacterStore.I.player.y;

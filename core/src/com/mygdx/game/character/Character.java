@@ -1,6 +1,8 @@
 package com.mygdx.game.character;
 
-public class Character {
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
+public class Character extends Actor {
 
     public float x;
     public float y;
@@ -27,7 +29,8 @@ public class Character {
         Idle,
         Running,
         Falling,
-        Squatting
+        Squatting,
+        FallThrough
     }
 
     public enum Class {

@@ -38,16 +38,16 @@ public class CharacterAnimationRenderer {
 
         this.stateTimes.put(character, 0f);
 
-        TextureRegion[][] regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Idle.png")), 16 ,16);
+        TextureRegion[][] regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Idle.png")), 16, 16);
         this.idleAnimation.put(character, new Animation<>(1f, regions[0]));
 
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Running.png")), 16 ,16);
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Running.png")), 16, 16);
         this.runningAnimation.put(character, new Animation<>(0.1f, regions[0]));
 
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Falling.png")), 16 ,16);
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Falling.png")), 16, 16);
         this.fallingAnimation.put(character, new Animation<>(0.3f, regions[0]));
 
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Squatting.png")), 16 ,16);
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Squatting.png")), 16, 16);
         this.squattingAnimation.put(character, new Animation<>(0.1f, regions[0]));
     }
 
@@ -60,12 +60,12 @@ public class CharacterAnimationRenderer {
             case Idle:
                 TextureRegion idleTextureRegion = idleAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
 
-                if(player.direction == Character.Direction.Left) {
+                if (player.direction == Character.Direction.Left) {
 
-                    if(!idleTextureRegion.isFlipX()) {
+                    if (!idleTextureRegion.isFlipX()) {
                         idleTextureRegion.flip(true, false);
                     } else {
-                        if(idleTextureRegion.isFlipX()) {
+                        if (idleTextureRegion.isFlipX()) {
                             idleTextureRegion.flip(true, false);
                         }
                     }
@@ -74,12 +74,12 @@ public class CharacterAnimationRenderer {
                 break;
             case Running:
                 TextureRegion runningTextureRegion = runningAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
-                if(player.direction == Character.Direction.Left) {
-                    if(!runningTextureRegion.isFlipX()) {
+                if (player.direction == Character.Direction.Left) {
+                    if (!runningTextureRegion.isFlipX()) {
                         runningTextureRegion.flip(true, false);
                     }
                 } else {
-                    if(runningTextureRegion.isFlipX()) {
+                    if (runningTextureRegion.isFlipX()) {
                         runningTextureRegion.flip(true, false);
                     }
                 }
@@ -87,6 +87,7 @@ public class CharacterAnimationRenderer {
                 break;
 
             case Falling:
+            case FallThrough:
                 TextureRegion fallingTextureRegion = fallingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
                 batch.draw(fallingTextureRegion, player.x, player.y);
                 break;
