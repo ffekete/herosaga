@@ -22,6 +22,7 @@ public class CharacterAnimationRenderer {
     Map<Character, Animation<TextureRegion>> landingAnimation;
     Map<Character, Animation<TextureRegion>> jumpingAnimation;
     Map<Character, Animation<TextureRegion>> jumpingAnticipationAnimation;
+    Map<Character, Animation<TextureRegion>> climbingAnimation;
 
     public CharacterAnimationRenderer() {
 
@@ -34,6 +35,7 @@ public class CharacterAnimationRenderer {
         this.landingAnimation = new HashMap<>();
         this.jumpingAnimation = new HashMap<>();
         this.jumpingAnticipationAnimation = new HashMap<>();
+        this.climbingAnimation = new HashMap<>();
 
         // others
     }
@@ -64,6 +66,9 @@ public class CharacterAnimationRenderer {
 
         regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-JumpingAnticipation.png")), 16, 16);
         this.jumpingAnticipationAnimation.put(character, new Animation<>(0.05f, regions[0]));
+
+        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Climbing.png")), 16, 16);
+        this.climbingAnimation.put(character, new Animation<>(0.05f, regions[0]));
     }
 
     public void render(SpriteBatch batch) {
@@ -159,6 +164,22 @@ public class CharacterAnimationRenderer {
                 }
 
                 batch.draw(jumpingTextureRegion, player.x, player.y);
+                break;
+
+            case Climbing:
+                TextureRegion climbingTextureRegion = climbingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
+
+                if (player.direction == Character.Direction.Left) {
+                    if (!climbingTextureRegion.isFlipX()) {
+                        climbingTextureRegion.flip(true, false);
+                    }
+                } else {
+                    if (climbingTextureRegion.isFlipX()) {
+                        climbingTextureRegion.flip(true, false);
+                    }
+                }
+
+                batch.draw(climbingTextureRegion, player.x, player.y);
                 break;
         }
     }

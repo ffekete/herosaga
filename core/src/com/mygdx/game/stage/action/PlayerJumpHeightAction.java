@@ -8,7 +8,7 @@ import com.mygdx.game.store.CharacterStore;
 
 public class PlayerJumpHeightAction extends Action {
 
-    private static final float JUMP_SPEED_INCREASE_STEP = 1f;
+    private static final float JUMP_SPEED_INCREASE_STEP = 0.25f;
     float duration = 0.05f;
 
     @Override
@@ -16,7 +16,7 @@ public class PlayerJumpHeightAction extends Action {
 
         duration += delta;
 
-        if (duration >= 0.10f) {
+        if (duration >= 0.05f) {
 
             if (!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 

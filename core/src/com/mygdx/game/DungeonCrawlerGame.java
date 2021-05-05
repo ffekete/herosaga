@@ -59,7 +59,8 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
             public boolean keyDown(int keycode) {
 
                 if (keycode == Input.Keys.UP) {
-                    CharacterStore.I.player.y += 32;
+                    CharacterAnimationRenderer.I.resetAnimation(CharacterStore.I.player);
+                    CharacterStore.I.player.overrideState = Character.State.Climbing;
                 }
 
                 if (keycode == Input.Keys.LEFT) {

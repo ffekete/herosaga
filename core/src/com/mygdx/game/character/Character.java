@@ -44,7 +44,8 @@ public class Character extends Actor {
         Squatting,
         Landing,
         JumpingAnticipation,
-        Jumping
+        Jumping,
+        Climbing
     }
 
     public enum Class {
