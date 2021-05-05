@@ -33,10 +33,10 @@ public class GravityAction extends Action {
                 return false; // jumping, nothing to do here
             }
 
-            calculateOffsets();
-
             float px = character.x + 8f;
             float py = character.y;
+
+            calculateOffsets();
 
             if (MapStore.I.dungeon.getTileBelow(px, py, actualPyOffset).obstacleFromUp) {
                 character.y = ((py) / 16) * 16;

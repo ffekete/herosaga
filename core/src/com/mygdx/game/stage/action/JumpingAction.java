@@ -15,22 +15,23 @@ public class JumpingAction extends Action {
     public float actualPyOffset = 0;
     public float actualPxOffset = 0;
     private float update = 0f;
-    private float height;
+    private Float height = null;
 
 
     public JumpingAction(Character character,
-                         float pyOffsetLimit,
                          float pxOffsetLimit) {
         this.character = character;
-        this.pyOffsetLimit = pyOffsetLimit;
         this.pxOffsetLimit = pxOffsetLimit;
-        this.height = character.getJumpHeight();
     }
 
     @Override
     public boolean act(float v) {
 
-        if(height <= 0) {
+        if (height == null) {
+            this.height = character.jumpHeight;
+        }
+
+        if (height <= 0) {
             character.overrideState = null;
             return true;
         }
@@ -39,7 +40,9 @@ public class JumpingAction extends Action {
 
         if (update >= 0.005f) {
 
-            height -= 0.5f;
+            height -= 0.25f;
+
+            this.pyOffsetLimit = character.jumpHeight;
 
             calculateVerticalOffsets();
             calculateHorizontalOffsets();
@@ -47,13 +50,13 @@ public class JumpingAction extends Action {
             float px = character.x + 8f;
             float py = character.y;
 
-            if(MapStore.I.dungeon.getTileAbove(px, py, actualPyOffset).obstacleFromDown) {
+            if (MapStore.I.dungeon.getTileAbove(px, py, actualPyOffset).obstacleFromDown) {
                 character.y = ((py) / 16) * 16 + 15;
                 actualPyOffset = 0; // stop jump
                 character.overrideState = null;
             } else {
                 character.y += actualPyOffset;
-                character.x += actualPxOffset;
+                character.x += actualPxOffset * 3;
             }
 
             update = 0f;

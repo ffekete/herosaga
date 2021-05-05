@@ -50,6 +50,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
         CharacterStore.I.player.addAction(new GravityAction(CharacterStore.I.player, 1f));
         CharacterStore.I.player.addAction(new PlayerMovementSpeedAction());
+        CharacterStore.I.player.addAction(new PlayerJumpHeightAction());
         stage.addActor(CharacterStore.I.player);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -83,7 +84,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
                     SequenceAction action = new SequenceAction();
                     action.addAction(new JumpingAnticipationAction(0.3f, CharacterStore.I.player));
-                    action.addAction(new JumpingAction(CharacterStore.I.player, 1f, CharacterStore.I.player.runningSpeed * 5));
+                    action.addAction(new JumpingAction(CharacterStore.I.player, CharacterStore.I.player.runningSpeed * 5));
 
                     CharacterStore.I.player.addAction(action);
                 }
@@ -132,7 +133,9 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(100, 10, 100 + CharacterStore.I.player.runningSpeed *  100, 11);
+        shapeRenderer.rect(100, 10, CharacterStore.I.player.runningSpeed * 100, 10);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.rect(100, 25, CharacterStore.I.player.jumpHeight * 100, 10);
         shapeRenderer.end();
     }
 

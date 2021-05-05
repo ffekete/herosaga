@@ -8,6 +8,7 @@ public class Character extends Actor {
     public float y;
 
     public float runningSpeed;
+    public float jumpHeight;
 
     public State state = State.Idle;
     public State overrideState = null;
@@ -15,8 +16,8 @@ public class Character extends Actor {
     public Class aClass;
     public Direction direction = Direction.Right;
 
-    private float speed;
-    private float jumpHeight;
+    private float maxRunningSpeed;
+    private float maxJumpHeight;
 
     public Character(float x,
                      float y,
@@ -24,16 +25,16 @@ public class Character extends Actor {
         this.x = x;
         this.y = y;
         this.aClass = aClass;
-        this.speed = aClass.speed;
-        this.jumpHeight = aClass.jumpHeight;
+        this.maxRunningSpeed = aClass.speed;
+        this.maxJumpHeight = aClass.jumpHeight;
     }
 
     public float getMaxRunningSpeed() {
-        return speed; // add modifiers later
+        return maxRunningSpeed; // add modifiers later
     }
 
-    public float getJumpHeight() {
-        return jumpHeight;
+    public float getMaxJumpHeight() {
+        return maxJumpHeight;
     }
 
     public enum State {
@@ -47,7 +48,7 @@ public class Character extends Actor {
     }
 
     public enum Class {
-        Rogue(0.5f, 10f);
+        Rogue(0.5f, 3f);
 
         public float speed;
         public float jumpHeight;
