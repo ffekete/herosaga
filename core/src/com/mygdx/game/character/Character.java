@@ -49,7 +49,7 @@ public class Character extends Actor {
     }
 
     public enum Class {
-        Rogue(0.5f, 3f);
+        Rogue(0.5f, 2f);
 
         public float speed;
         public float jumpHeight;

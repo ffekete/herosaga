@@ -51,6 +51,8 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         CharacterStore.I.player.addAction(new GravityAction(CharacterStore.I.player, 1f));
         CharacterStore.I.player.addAction(new PlayerMovementSpeedAction());
         CharacterStore.I.player.addAction(new PlayerJumpHeightAction());
+        CharacterStore.I.player.addAction(new HorizontalGravityAction(CharacterStore.I.player));
+
         stage.addActor(CharacterStore.I.player);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -85,7 +87,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
                     SequenceAction action = new SequenceAction();
                     action.addAction(new JumpingAnticipationAction(0.2f, CharacterStore.I.player));
-                    action.addAction(new JumpingAction(CharacterStore.I.player, CharacterStore.I.player.runningSpeed * 5));
+                    action.addAction(new JumpingAction(CharacterStore.I.player));
 
                     CharacterStore.I.player.addAction(action);
                 }
