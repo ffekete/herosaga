@@ -28,19 +28,19 @@ public class JumpingAction extends Action {
     public boolean act(float v) {
 
         if (height == null) {
-            this.height = character.jumpHeight;
+            this.height = 0f;
         }
 
-        if (height <= 0) {
+        if (height >= character.jumpHeight) {
             character.overrideState = null;
             return true;
         }
 
         update += v;
 
-        if (update >= 0.005f) {
+        if (update >= 0.01f) {
 
-            height -= 0.25f;
+            height += 0.25f;
 
             this.pyOffsetLimit = character.jumpHeight;
 
@@ -90,14 +90,14 @@ public class JumpingAction extends Action {
         float py = character.y;
 
         if (character.direction == Character.Direction.Left) {
-            if (dungeon.getTileToLeft(px, py, actualPxOffset).obstacleFromSide) {
+            if (dungeon.getTileToLeft(px, py, 1).obstacleFromSide) {
                 pxOffsetLimit = 0;
                 actualPxOffset = 0;
             }
         }
 
         if (character.direction == Character.Direction.Right) {
-            if (dungeon.getTileToRight(px, py, actualPxOffset).obstacleFromSide) {
+            if (dungeon.getTileToRight(px, py, 1).obstacleFromSide) {
                 pxOffsetLimit = 0;
                 actualPxOffset = 0;
             }

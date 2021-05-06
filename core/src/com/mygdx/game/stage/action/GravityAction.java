@@ -26,7 +26,7 @@ public class GravityAction extends Action {
 
         update += v;
 
-        if (update >= 0.005f) {
+        if (update >= 0.01f) {
 
             if (character.overrideState == Character.State.Jumping) {
                 update = 0;

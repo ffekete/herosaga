@@ -65,12 +65,12 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
 
                 if (keycode == Input.Keys.LEFT) {
 
-                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Left, -1f * CharacterStore.I.player.getMaxRunningSpeed()));
+                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Left));
                     CharacterStore.I.player.state = Character.State.Running;
                 }
 
                 if (keycode == Input.Keys.RIGHT) {
-                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Right, CharacterStore.I.player.getMaxRunningSpeed()));
+                    CharacterStore.I.player.addAction(new MovementAction(CharacterStore.I.player, Character.Direction.Right));
                     CharacterStore.I.player.state = Character.State.Running;
                 }
 
@@ -84,7 +84,7 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
                     CharacterStore.I.player.overrideState = Character.State.JumpingAnticipation;
 
                     SequenceAction action = new SequenceAction();
-                    action.addAction(new JumpingAnticipationAction(0.3f, CharacterStore.I.player));
+                    action.addAction(new JumpingAnticipationAction(0.2f, CharacterStore.I.player));
                     action.addAction(new JumpingAction(CharacterStore.I.player, CharacterStore.I.player.runningSpeed * 5));
 
                     CharacterStore.I.player.addAction(action);

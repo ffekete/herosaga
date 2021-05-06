@@ -1,6 +1,5 @@
 package com.mygdx.game.stage.action;
 
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.mygdx.game.character.Character;
 
@@ -16,7 +15,7 @@ public class JumpingAnticipationAction extends TemporalAction {
 
     @Override
     protected void update(float percent) {
-        if(percent >= 0.95f) {
+        if (percent >= 0.95f) {
             this.character.overrideState = Character.State.Jumping;
         }
     }

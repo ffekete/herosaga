@@ -16,8 +16,7 @@ public class MovementAction extends Action {
 
 
     public MovementAction(Character character,
-                          Character.Direction direction,
-                          float pxOffsetLimit) {
+                          Character.Direction direction) {
         this.character = character;
         this.character.direction = direction;
         this.direction = direction;
@@ -43,8 +42,6 @@ public class MovementAction extends Action {
         if (update >= 0.015f) {
 
             calculateOffsets();
-
-            System.out.println(actualPxOffset);
 
             if(character.direction == Character.Direction.Left) {
                 if(MapStore.I.dungeon.getTileToLeft(character.x + 8, character.y, Math.abs(actualPxOffset)).obstacleFromSide) {

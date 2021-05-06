@@ -16,7 +16,7 @@ public class PlayerJumpHeightAction extends Action {
 
         duration += delta;
 
-        if (duration >= 0.05f) {
+        if (duration >= 0.025f) {
 
             if (!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 
