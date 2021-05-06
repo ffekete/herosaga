@@ -34,6 +34,7 @@ public class PositionCorrectionAction extends Action {
             if((dungeon.getTileExactly(character.x + 6, character.y).obstacleFromUp ||
                     dungeon.getTileExactly(character.x + 10, character.y).obstacleFromUp)) {
                 character.y = (character.y / 16) * 16 + 16;
+                character.overrideState = null;
             }
         }
 
