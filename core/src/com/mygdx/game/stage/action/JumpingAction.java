@@ -32,6 +32,12 @@ public class JumpingAction extends Action {
             return true;
         }
 
+        if (MapStore.I.dungeon.getTileAbove(character.x + 7, character.y + 16, 1).obstacleFromDown ||
+                MapStore.I.dungeon.getTileAbove(character.x + 9, character.y + 16, 1).obstacleFromDown) {
+            character.overrideState = null;
+            return true;
+        }
+
         update += v;
 
         if (update >= 0.01f) {

@@ -44,14 +44,14 @@ public class MovementAction extends Action {
             calculateOffsets();
 
             if (character.direction == Character.Direction.Left) {
-                if (MapStore.I.dungeon.getTileToLeft(character.x + 4, character.y, 1).obstacleFromSide) {
+                if (MapStore.I.dungeon.getTileToLeft(character.x + 6, character.y, 1).obstacleFromSide) {
                     character.x = (character.x / 16) * 16;
                     actualPxOffset = 0;
                 } else {
                     character.x += actualPxOffset;
                 }
             } else if (character.direction == Character.Direction.Right) {
-                if (MapStore.I.dungeon.getTileToRight(character.x + 12, character.y, 1).obstacleFromSide) {
+                if (MapStore.I.dungeon.getTileToRight(character.x + 10, character.y, 1).obstacleFromSide) {
                     character.x = (character.x / 16) * 16;
                     actualPxOffset = 0;
                 } else {
@@ -73,7 +73,7 @@ public class MovementAction extends Action {
 
         // if blocked to the left, stop immediately
         if (character.direction == Character.Direction.Left) {
-            if (dungeon.getTileToLeft(character.x + 12, py, Math.abs(actualPxOffset)).obstacleFromSide) {
+            if (dungeon.getTileToLeft(character.x + 10, py, Math.abs(actualPxOffset)).obstacleFromSide) {
                 character.runningSpeed = 0;
                 actualPxOffset = 0;
             }
@@ -81,7 +81,7 @@ public class MovementAction extends Action {
 
         // if blocked to the right, stop immediately
         if (character.direction == Character.Direction.Right) {
-            if (dungeon.getTileToRight(character.x + 4, py, Math.abs(actualPxOffset)).obstacleFromSide) {
+            if (dungeon.getTileToRight(character.x + 6, py, Math.abs(actualPxOffset)).obstacleFromSide) {
                 character.runningSpeed = 0;
                 actualPxOffset = 0;
             }

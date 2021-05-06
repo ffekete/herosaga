@@ -41,6 +41,7 @@ public class Character extends Actor {
         Idle,
         Running,
         Falling,
+        FallingThrough,
         Squatting,
         Landing,
         JumpingAnticipation,

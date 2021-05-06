@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.character.Character;
 import com.mygdx.game.character.CharacterAnimationRenderer;
 import com.mygdx.game.stage.action.*;
+import com.mygdx.game.stage.action.camera.FollowCameraAction;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
 import com.mygdx.game.store.MapStore;
@@ -52,6 +53,8 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         CharacterStore.I.player.addAction(new PlayerMovementSpeedAction());
         CharacterStore.I.player.addAction(new PlayerJumpHeightAction());
         CharacterStore.I.player.addAction(new HorizontalGravityAction(CharacterStore.I.player));
+        CharacterStore.I.player.addAction(new PositionCorrectionAction(CharacterStore.I.player));
+        CharacterStore.I.player.addAction(new FollowCameraAction());
 
         stage.addActor(CharacterStore.I.player);
 
@@ -124,10 +127,6 @@ public class DungeonCrawlerGame extends ApplicationAdapter {
         // draw here
 
         stage.act();
-
-        camera.position.x = CharacterStore.I.player.x;
-        camera.position.y = CharacterStore.I.player.y;
-        camera.update();
 
         MapStore.I.dungeon.render(batch);
 
