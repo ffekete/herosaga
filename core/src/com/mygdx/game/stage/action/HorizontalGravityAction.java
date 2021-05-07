@@ -27,32 +27,57 @@ public class HorizontalGravityAction extends Action {
 
         if (update >= 0.005f) {
 
-            if(character.overrideState == Character.State.Jumping) {
+            if (character.overrideState == Character.State.Jumping) {
 
-                if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 
                     // reset if it was to the other direction
-                    if(offset > 0) {
+                    if (offset > 0) {
                         offset = 0;
                     }
 
                     offset -= 0.25f;
-                    if(offset < -3) {
+                    if (offset < -3) {
                         offset = -3;
                     }
                     character.x += offset;
-                }
-
-                else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 
                     // reset if it was to the other direction
-                    if(offset < 0) {
+                    if (offset < 0) {
                         offset = 0;
                     }
 
                     offset += 0.25f;
-                    if(offset > 3) {
+                    if (offset > 3) {
                         offset = 3;
+                    }
+                    character.x += offset;
+                }
+            } else if (character.overrideState == Character.State.Falling) {
+
+                if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+
+                    // reset if it was to the other direction
+                    if (offset > 0) {
+                        offset = 0;
+                    }
+
+                    offset -= 0.25f;
+                    if (offset < -0.75f) {
+                        offset = -0.75f;
+                    }
+                    character.x += offset;
+                } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+
+                    // reset if it was to the other direction
+                    if (offset < 0) {
+                        offset = 0;
+                    }
+
+                    offset += 0.25f;
+                    if (offset > 0.75f) {
+                        offset = 0.75f;
                     }
                     character.x += offset;
                 }

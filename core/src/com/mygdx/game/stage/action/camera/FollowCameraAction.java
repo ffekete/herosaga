@@ -41,6 +41,12 @@ public class FollowCameraAction extends Action {
                 camera.update();
             }
 
+            if(!camera.frustum.pointInFrustum(player.x, player.y, 0f)) {
+                camera.position.x = player.x;
+                camera.position.y = player.y;
+                camera.update();
+            }
+
             duration = 0;
         }
 

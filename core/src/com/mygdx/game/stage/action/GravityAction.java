@@ -47,6 +47,9 @@ public class GravityAction extends Action {
 
                 actualPyOffset = 0; // stop falling
             } else {
+                if(actualPyOffset != 0) {
+                    character.overrideState = Character.State.Falling;
+                }
                 character.y -= actualPyOffset;
             }
 
