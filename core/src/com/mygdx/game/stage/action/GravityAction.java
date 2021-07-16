@@ -24,19 +24,22 @@ public class GravityAction extends Action {
                 // y offsets
                 float yOffset = 0f;
 
+                // falling down
                 if (character.y > character.y / 16 * 16) {
                     yOffset -= GRAVITY_FORCE;
-                } else if (!(MapStore.I.dungeon.getTileBelow(character.x, character.y, 1).obstacleFromUp ||
-                        MapStore.I.dungeon.getTileBelow(character.x + 15, character.y, 1).obstacleFromUp)
+                } else if (!(MapStore.I.dungeon.getTileBelow(character.x + 4, character.y, 1).obstacleFromUp ||
+                        MapStore.I.dungeon.getTileBelow(character.x + 12, character.y, 1).obstacleFromUp)
                 ) {
                     yOffset -= GRAVITY_FORCE;
                 }
 
+                // jump up
                 if (character.physics.verticalForce > 0) {
                     character.physics.verticalForce = Math.max(character.physics.verticalForce - 1f, 0f);
                     yOffset += character.physics.verticalForce / 4f;
                 }
 
+                // jump blocked from above?
                 if (yOffset > 0 && (
                         MapStore.I.dungeon.getTileAbove(character.x + 4, character.y + 16, 1).obstacleFromDown
                                 || MapStore.I.dungeon.getTileAbove(character.x + 12, character.y + 16, 1).obstacleFromDown
@@ -44,12 +47,15 @@ public class GravityAction extends Action {
                     yOffset = 0;
                 }
 
-                character.y += yOffset;
-
-                // if character fell through
-                if (MapStore.I.dungeon.getTileExactly(character.x, character.y).obstacleFromUp) {
-                    character.y = (character.y + 1) / 16 * 16;
+                // falling down blocked?
+                if (yOffset < 0 && (
+                        MapStore.I.dungeon.getTileBelow(character.x + 8, character.y, Math.abs(yOffset)).obstacleFromUp
+                                || MapStore.I.dungeon.getTileBelow(character.x + 12, character.y, Math.abs(yOffset)).obstacleFromUp)) {
+                    yOffset = (character.y / 16 * 16) - character.y + 1;
                 }
+
+
+                character.y += yOffset;
 
                 // x offsets
                 float xOffset = 0f;
@@ -64,11 +70,11 @@ public class GravityAction extends Action {
                     xOffset -= 0.75f;
                 }
 
-                if (xOffset > 0 && character.x < character.x / 16 * 16 + 16 && MapStore.I.dungeon.getTileToRight(character.x, character.y, 16).obstacleFromSide) {
+                if (xOffset > 0 && MapStore.I.dungeon.getTileToRight(character.x + 12, character.y, 1).obstacleFromSide) {
                     xOffset = 0;
                 }
 
-                if (xOffset < 0 && character.x == character.x / 16 * 16 && MapStore.I.dungeon.getTileToLeft(character.x, character.y, 1).obstacleFromSide) {
+                if (xOffset < 0 && MapStore.I.dungeon.getTileToLeft(character.x + 4, character.y, 1).obstacleFromSide) {
                     xOffset = 0;
                 }
 

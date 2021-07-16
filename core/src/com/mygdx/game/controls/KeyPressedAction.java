@@ -15,9 +15,7 @@ public class KeyPressedAction extends Action {
 
         duration += delta;
 
-        if(duration > 0.025f) {
-
-            //CharacterStore.player.physics.horizontalForce = 0f;
+        if (duration > 0.025f) {
 
             if (Gdx.input.isKeyPressed(InputMapping.LEFT)) {
 
@@ -27,7 +25,7 @@ public class KeyPressedAction extends Action {
                     CharacterStore.player.state = Character.State.Running;
                     CharacterStore.player.physics.horizontalForce = -2;
                 } else if (CharacterStore.player.state == Character.State.Jumping) {
-                    CharacterStore.player.physics.horizontalForce = -1;
+                    CharacterStore.player.physics.horizontalForce = -0.5f;
                 }
             } else if (Gdx.input.isKeyPressed(InputMapping.RIGHT)) {
 
@@ -38,23 +36,22 @@ public class KeyPressedAction extends Action {
                     CharacterStore.player.physics.horizontalForce = 2;
                 } else {
                     if (CharacterStore.player.state == Character.State.Jumping) {
-                        CharacterStore.player.physics.horizontalForce = 1;
+                        CharacterStore.player.physics.horizontalForce = 0.5f;
                     }
                 }
             }
 
             if (Gdx.input.isKeyPressed(InputMapping.SPACE) && CharacterStore.player.physics.canJump) {
 
-                if(CharacterStore.player.physics.verticalForce == 0) {
+                if (CharacterStore.player.physics.verticalForce == 0) {
                     CharacterStore.player.physics.verticalForce = 10;
                 } else {
                     CharacterStore.player.physics.verticalForce += 5;
                 }
-
-                    if(CharacterStore.player.physics.verticalForce > PhysicsParameters.JUMP_FORCE) {
-                        CharacterStore.player.physics.canJump = false;
-                        CharacterStore.player.physics.verticalForce = PhysicsParameters.JUMP_FORCE;
-                    }
+                if (CharacterStore.player.physics.verticalForce > PhysicsParameters.JUMP_FORCE) {
+                    CharacterStore.player.physics.canJump = false;
+                    CharacterStore.player.physics.verticalForce = PhysicsParameters.JUMP_FORCE;
+                }
 
             }
 
