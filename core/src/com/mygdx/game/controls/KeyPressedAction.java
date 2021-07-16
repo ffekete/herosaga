@@ -24,9 +24,10 @@ public class KeyPressedAction extends Action {
                 if (CharacterStore.player.state == Character.State.Idle || CharacterStore.player.state == Character.State.Running) {
                     CharacterStore.player.state = Character.State.Running;
                     CharacterStore.player.physics.horizontalForce = -2;
-                } else if (CharacterStore.player.state == Character.State.Jumping) {
+                } else if (CharacterStore.player.state == Character.State.Jumping || CharacterStore.player.state == Character.State.Falling) {
                     CharacterStore.player.physics.horizontalForce = -0.5f;
                 }
+
             } else if (Gdx.input.isKeyPressed(InputMapping.RIGHT)) {
 
                 CharacterStore.player.direction = Character.Direction.Right;
@@ -35,14 +36,13 @@ public class KeyPressedAction extends Action {
                     CharacterStore.player.state = Character.State.Running;
                     CharacterStore.player.physics.horizontalForce = 2;
                 } else {
-                    if (CharacterStore.player.state == Character.State.Jumping) {
+                    if (CharacterStore.player.state == Character.State.Jumping || CharacterStore.player.state == Character.State.Falling) {
                         CharacterStore.player.physics.horizontalForce = 0.5f;
                     }
                 }
             }
 
             if (Gdx.input.isKeyPressed(InputMapping.SPACE) && CharacterStore.player.physics.canJump) {
-
                 if (CharacterStore.player.physics.verticalForce == 0) {
                     CharacterStore.player.physics.verticalForce = 10;
                 } else {
@@ -52,7 +52,6 @@ public class KeyPressedAction extends Action {
                     CharacterStore.player.physics.canJump = false;
                     CharacterStore.player.physics.verticalForce = PhysicsParameters.JUMP_FORCE;
                 }
-
             }
 
             duration = 0;

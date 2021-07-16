@@ -110,6 +110,17 @@ public class CharacterAnimationRenderer {
 
             case Falling:
                 TextureRegion fallingTextureRegion = fallingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
+
+                if (player.direction == Character.Direction.Left) {
+                    if (!fallingTextureRegion.isFlipX()) {
+                        fallingTextureRegion.flip(true, false);
+                    }
+                } else {
+                    if (fallingTextureRegion.isFlipX()) {
+                        fallingTextureRegion.flip(true, false);
+                    }
+                }
+
                 batch.draw(fallingTextureRegion, player.x, player.y);
                 break;
 
@@ -151,7 +162,7 @@ public class CharacterAnimationRenderer {
                 break;
 
             case Jumping:
-                TextureRegion jumpingTextureRegion = jumpingAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
+                TextureRegion jumpingTextureRegion = jumpingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
 
                 if (player.direction == Character.Direction.Left) {
                     if (!jumpingTextureRegion.isFlipX()) {
