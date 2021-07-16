@@ -9,6 +9,7 @@ import com.mygdx.game.store.CharacterStore;
 public class KeyPressedAction extends Action {
 
     private float duration = 0f;
+    private boolean spaceReleased = false;
 
     @Override
     public boolean act(float delta) {
@@ -42,16 +43,28 @@ public class KeyPressedAction extends Action {
                 }
             }
 
-            if (Gdx.input.isKeyPressed(InputMapping.SPACE) && CharacterStore.player.physics.canJump) {
-                if (CharacterStore.player.physics.verticalForce == 0) {
-                    CharacterStore.player.physics.verticalForce = 10;
-                } else {
-                    CharacterStore.player.physics.verticalForce += 5;
+            if (Gdx.input.isKeyPressed(InputMapping.SPACE)) {
+
+                if(spaceReleased && CharacterStore.player.jumpState != JumpState.NoJump) {
+                    return false;
                 }
-                if (CharacterStore.player.physics.verticalForce > PhysicsParameters.JUMP_FORCE) {
+
+                if (CharacterStore.player.jumpState == JumpState.NoJump) {
+
+                    CharacterStore.player.physics.verticalForce = 10;
+                    CharacterStore.player.jumpState = JumpState.Ascending;
+
+                } else if (CharacterStore.player.jumpState == JumpState.Ascending && CharacterStore.player.physics.verticalForce < PhysicsParameters.JUMP_FORCE) {
+
+                    CharacterStore.player.physics.verticalForce += 5;
+
+                } else if (CharacterStore.player.jumpState == JumpState.Ascending && CharacterStore.player.physics.verticalForce >= PhysicsParameters.JUMP_FORCE) {
                     CharacterStore.player.physics.canJump = false;
                     CharacterStore.player.physics.verticalForce = PhysicsParameters.JUMP_FORCE;
+                    CharacterStore.player.jumpState = JumpState.Descending;
                 }
+            } else {
+
             }
 
             duration = 0;

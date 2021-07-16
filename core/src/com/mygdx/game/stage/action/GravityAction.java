@@ -2,6 +2,8 @@ package com.mygdx.game.stage.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.game.character.Character;
+import com.mygdx.game.controls.JumpState;
+import com.mygdx.game.physics.PhysicsParameters;
 import com.mygdx.game.store.CharacterStore;
 import com.mygdx.game.store.MapStore;
 import com.mygdx.game.store.PhysicsStore;
@@ -46,6 +48,7 @@ public class GravityAction extends Action {
                 if (character.physics.verticalForce > 0) {
                     character.physics.verticalForce = Math.max(character.physics.verticalForce - 1f, 0f);
                     yOffset += character.physics.verticalForce / 4f;
+                    System.out.println(yOffset);
                 }
 
                 // jump blocked from above?
@@ -90,7 +93,8 @@ public class GravityAction extends Action {
                 // if landed
                 if (character.state == Character.State.Landing) {
                     landingCounter.put(character, landingCounter.get(character) + 1);
-                    if (landingCounter.get(character) >= 30) {
+                    if (landingCounter.get(character) >= 50) {
+                        CharacterStore.player.jumpState = JumpState.NoJump;
                         if (xOffset != 0) {
                             character.state = Character.State.Running;
                         } else {
@@ -105,17 +109,20 @@ public class GravityAction extends Action {
 
                 // check jumping capability
                 if (yOffset == 0 &&
+                        character.state != Character.State.Landing &&
                         (MapStore.I.dungeon.getTileBelow(character.x + 4, character.y, 1).obstacleFromUp ||
                                 MapStore.I.dungeon.getTileBelow(character.x + 12, character.y, 1).obstacleFromUp)) {
-                    CharacterStore.player.physics.canJump = true;
+                    CharacterStore.player.jumpState = JumpState.NoJump;
                 }
 
                 // check for landing
                 if (yOffset == 0) {
-                    if (character.state == Character.State.Falling && fallingCounter.get(character) > 20) { // if player was falling
+                    if (character.state == Character.State.Falling && fallingCounter.get(character) > PhysicsParameters.JUMP_FORCE * 1.5f) { // if player was falling
+
                         character.state = Character.State.Landing;
                         landingCounter.put(character, 0);
                         fallingCounter.put(character, 0);
+
                     }else if (character.state != Character.State.Landing) {
                         fallingCounter.put(character, 0);
                         if (xOffset != 0) {
