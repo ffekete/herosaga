@@ -10,6 +10,7 @@ public class FollowCameraAction extends Action {
 
     private static final float STEP = 0.5f;
     private float duration = 0;
+    private boolean follow = false;
 
     @Override
     public boolean act(float v) {
@@ -19,33 +20,11 @@ public class FollowCameraAction extends Action {
         if (duration > 0.0001f) {
 
             OrthographicCamera camera = CameraStore.I.orthographicCamera;
-            Character player = CharacterStore.I.player;
+            Character player = CharacterStore.player;
 
-            if (camera.position.x < player.x + 8) {
-                camera.position.x += STEP;
-                camera.update();
-            }
-
-            if (camera.position.x > player.x + 8) {
-                camera.position.x -= STEP;
-                camera.update();
-            }
-
-            if (camera.position.y < player.y + 8) {
-                camera.position.y += STEP;
-                camera.update();
-            }
-
-            if (camera.position.y > player.y + 8) {
-                camera.position.y -= STEP;
-                camera.update();
-            }
-
-            if(!camera.frustum.pointInFrustum(player.x, player.y, 0f)) {
-                camera.position.x = player.x;
-                camera.position.y = player.y;
-                camera.update();
-            }
+            camera.position.x = player.x;
+            camera.position.y = player.y;
+            camera.update();
 
             duration = 0;
         }

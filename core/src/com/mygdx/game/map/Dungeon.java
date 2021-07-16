@@ -55,7 +55,7 @@ public class Dungeon {
     public void render(SpriteBatch spriteBatch) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                renderBackground(j, i, spriteBatch);
+                renderBackground(i, j, spriteBatch);
             }
         }
 

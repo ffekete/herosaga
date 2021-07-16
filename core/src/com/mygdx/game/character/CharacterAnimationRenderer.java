@@ -72,11 +72,11 @@ public class CharacterAnimationRenderer {
     }
 
     public void render(SpriteBatch batch) {
-        Character player = CharacterStore.I.player;
+        Character player = CharacterStore.player;
 
         this.stateTimes.put(player, this.stateTimes.get(player) + Gdx.graphics.getDeltaTime());
 
-        Character.State state = player.overrideState != null ? player.overrideState : player.state;
+        Character.State state = player.state;
 
         switch (state) {
             case Idle:

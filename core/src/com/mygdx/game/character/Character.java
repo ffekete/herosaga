@@ -1,23 +1,21 @@
 package com.mygdx.game.character;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.game.physics.Physics;
 
 public class Character extends Actor {
 
     public float x;
     public float y;
+    public Physics physics = new Physics();
 
     public float runningSpeed;
     public float jumpHeight;
 
     public State state = State.Idle;
-    public State overrideState = null;
 
     public Class aClass;
     public Direction direction = Direction.Right;
-
-    private float maxRunningSpeed;
-    private float maxJumpHeight;
 
     public Character(float x,
                      float y,
@@ -25,16 +23,6 @@ public class Character extends Actor {
         this.x = x;
         this.y = y;
         this.aClass = aClass;
-        this.maxRunningSpeed = aClass.speed;
-        this.maxJumpHeight = aClass.jumpHeight;
-    }
-
-    public float getMaxRunningSpeed() {
-        return maxRunningSpeed; // add modifiers later
-    }
-
-    public float getMaxJumpHeight() {
-        return maxJumpHeight;
     }
 
     public enum State {
