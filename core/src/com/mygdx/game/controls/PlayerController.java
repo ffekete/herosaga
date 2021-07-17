@@ -46,6 +46,7 @@ public class PlayerController {
         if (CharacterStore.player.position.y < 0) {
 
             CharacterStore.player.position.y = 0f;
+            CharacterStore.player.setY(0f);
 
             //bob.setPosition(CharacterStore.player.position);
 
@@ -82,12 +83,12 @@ public class PlayerController {
     public void processInput() {
         if (Gdx.input.isKeyPressed(InputMapping.LEFT)) {
 
-            CharacterStore.player.velocity.x = -20;
+            CharacterStore.player.velocity.x = -ACCELERATION;
             CharacterStore.player.direction = Character.Direction.Left;
             CharacterStore.player.state = Character.State.Running;
 
         } else if (Gdx.input.isKeyPressed(InputMapping.RIGHT)) {
-            CharacterStore.player.velocity.x = 20;
+            CharacterStore.player.velocity.x = ACCELERATION;
             CharacterStore.player.direction = Character.Direction.Right;
             CharacterStore.player.state = Character.State.Running;
         } else if (CharacterStore.player.state != Character.State.Jumping) {

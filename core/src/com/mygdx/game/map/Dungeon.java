@@ -2,7 +2,6 @@ package com.mygdx.game.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.character.CharacterAnimationRenderer;
 import com.mygdx.game.map.tiles.Adjacency;
 import com.mygdx.game.store.CameraStore;
 
@@ -12,35 +11,35 @@ public class Dungeon {
 
     int width;
     int height;
-    Tile[][] backgroundMap;
-    Tile[][] map;
-    Tile baseTile;
-    Tile backgroundTile;
+    TileType[][] backgroundMap;
+    TileType[][] map;
+    TileType baseTileType;
+    TileType backgroundTileType;
     TextureRegion mapTextureRegion;
     TextureRegion backgroundTextureRegion;
 
     public Dungeon(int width,
                    int height,
-                   Tile baseTile,
-                   Tile backgroundTile) {
+                   TileType baseTileType,
+                   TileType backgroundTileType) {
         this.width = width;
         this.height = height;
-        this.map = new Tile[width][height];
-        this.backgroundMap = new Tile[width][height];
-        this.baseTile = baseTile;
-        this.backgroundTile = backgroundTile;
-        this.mapTextureRegion = baseTile.mapToRegion(baseTile);
-        this.backgroundTextureRegion = backgroundTile.mapToRegion(backgroundTile);
+        this.map = new TileType[width][height];
+        this.backgroundMap = new TileType[width][height];
+        this.baseTileType = baseTileType;
+        this.backgroundTileType = backgroundTileType;
+        this.mapTextureRegion = baseTileType.mapToRegion(baseTileType);
+        this.backgroundTextureRegion = backgroundTileType.mapToRegion(backgroundTileType);
     }
 
     public void setTile(int x,
                         int y,
-                        Tile value) {
+                        TileType value) {
         this.map[x][y] = value;
     }
 
-    public Tile getTile(int x,
-                        int y) {
+    public TileType getTile(int x,
+                            int y) {
         return map[x][y];
     }
 
@@ -59,7 +58,6 @@ public class Dungeon {
             }
         }
 
-        CharacterAnimationRenderer.I.render(spriteBatch);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -76,7 +74,7 @@ public class Dungeon {
             return;
         }
 
-        if (backgroundMap[x][y] != Tile.None) {
+        if (backgroundMap[x][y] != TileType.None) {
             spriteBatch.draw(getBackgroundTileTextureRegion(x, y), x * 16, y * 16);
         }
     }
@@ -89,7 +87,7 @@ public class Dungeon {
             return;
         }
 
-        if (map[x][y] != Tile.None) {
+        if (map[x][y] != TileType.None) {
             spriteBatch.draw(getBaseTileTextureRegion(x, y), x * 16, y * 16);
             renderDecoration(x, y, spriteBatch);
         }
@@ -109,22 +107,22 @@ public class Dungeon {
             return textureRegion;
         }
 
-        Tile actualTile = backgroundMap[x][y];
+        TileType actualTileType = backgroundMap[x][y];
 
         int v = 0;
-        if (x == 0 || (x > 0 && backgroundMap[x - 1][y] == actualTile)) {
+        if (x == 0 || (x > 0 && backgroundMap[x - 1][y] == actualTileType)) {
             v += 1;
         }
 
-        if (y == 0 || (y > 0 && backgroundMap[x][y - 1] == actualTile)) {
+        if (y == 0 || (y > 0 && backgroundMap[x][y - 1] == actualTileType)) {
             v += 8;
         }
 
-        if (x == backgroundMap.length - 1 || (x < backgroundMap.length - 1 && backgroundMap[x + 1][y] == actualTile)) {
+        if (x == backgroundMap.length - 1 || (x < backgroundMap.length - 1 && backgroundMap[x + 1][y] == actualTileType)) {
             v += 4;
         }
 
-        if (y == backgroundMap[0].length - 1 || (y < backgroundMap[0].length - 1 && backgroundMap[x][y + 1] == actualTile)) {
+        if (y == backgroundMap[0].length - 1 || (y < backgroundMap[0].length - 1 && backgroundMap[x][y + 1] == actualTileType)) {
             v += 2;
         }
 
@@ -158,22 +156,22 @@ public class Dungeon {
             return map[x][y].mapToRegion(map[x][y]);
         }
 
-        Tile actualTile = map[x][y];
+        TileType actualTileType = map[x][y];
 
         int v = 0;
-        if (x == 0 || (x > 0 && map[x - 1][y] == actualTile)) {
+        if (x == 0 || (x > 0 && map[x - 1][y] == actualTileType)) {
             v += 1;
         }
 
-        if (y == 0 || (y > 0 && map[x][y - 1] == actualTile)) {
+        if (y == 0 || (y > 0 && map[x][y - 1] == actualTileType)) {
             v += 8;
         }
 
-        if (x == map.length - 1 || (x < map.length - 1 && map[x + 1][y] == actualTile)) {
+        if (x == map.length - 1 || (x < map.length - 1 && map[x + 1][y] == actualTileType)) {
             v += 4;
         }
 
-        if (y == map[0].length - 1 || (y < map[0].length - 1 && map[x][y + 1] == actualTile)) {
+        if (y == map[0].length - 1 || (y < map[0].length - 1 && map[x][y + 1] == actualTileType)) {
             v += 2;
         }
 
@@ -206,22 +204,22 @@ public class Dungeon {
             return;
         }
 
-        Tile actualTile = map[x][y];
+        TileType actualTileType = map[x][y];
 
         int v = 0;
-        if (x > 0 && map[x - 1][y] == actualTile) {
+        if (x > 0 && map[x - 1][y] == actualTileType) {
             v += 1;
         }
 
-        if (y > 0 && map[x][y - 1] == actualTile) {
+        if (y > 0 && map[x][y - 1] == actualTileType) {
             v += 8;
         }
 
-        if (x < map.length - 1 && map[x + 1][y] == actualTile) {
+        if (x < map.length - 1 && map[x + 1][y] == actualTileType) {
             v += 4;
         }
 
-        if (y < map[0].length - 1 && map[x][y + 1] == actualTile) {
+        if (y < map[0].length - 1 && map[x][y + 1] == actualTileType) {
             v += 2;
         }
 
@@ -265,25 +263,25 @@ public class Dungeon {
         }
     }
 
-    public Tile getTileExactly(float px, float py) {
+    public TileType getTileExactly(float px, float py) {
         return getTile(((int)px) / 16,((int)py) / 16);
     }
 
-    public Tile getTileBelow(float px, float py, float amount) {
+    public TileType getTileBelow(float px, float py, float amount) {
         return getTile(((int)px) / 16,((int)(py-amount)) / 16);
     }
 
-    public Tile getTileToLeft(float px, float py, float amount) {
+    public TileType getTileToLeft(float px, float py, float amount) {
         return getTile(((int)(px -amount)) / 16,((int)py) / 16);
     }
 
-    public Tile getTileToRight(float px, float py, float amount) {
+    public TileType getTileToRight(float px, float py, float amount) {
         return getTile(((int)(px + amount)) / 16,((int)py) / 16);
     }
 
-    public Tile getTileAbove(float px,
-                             float py,
-                             float amount) {
+    public TileType getTileAbove(float px,
+                                 float py,
+                                 float amount) {
         return getTile(((int)px) / 16,((int)(py+amount)) / 16);
     }
 }

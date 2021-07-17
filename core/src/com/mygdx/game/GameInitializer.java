@@ -2,9 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.character.Character;
-import com.mygdx.game.character.CharacterAnimationRenderer;
 import com.mygdx.game.map.CaveDungeonCreator;
-import com.mygdx.game.map.Tile;
+import com.mygdx.game.map.TileType;
 import com.mygdx.game.map.util.DungeonSpaceSpotter;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
@@ -22,15 +21,14 @@ public class GameInitializer {
         CameraStore.I.orthographicCamera.position.y = startPoint.y;
 
         // place player
-        CharacterStore.player = new Character(startPoint.x, startPoint.y);
-        PhysicsStore.characters.add(CharacterStore.player);
+        CharacterStore.player = new Character(startPoint.x, startPoint.y, 16, 16, "character/rogue/Rogue");
 
-        CharacterAnimationRenderer.I.addAnimations(CharacterStore.player);
+        PhysicsStore.characters.add(CharacterStore.player);
     }
 
     public void reGenerate(int level) {
         if (level == 1) {
-            CaveDungeonCreator caveDungeonCreator = new CaveDungeonCreator(Tile.Rock, Tile.CaveBackground);
+            CaveDungeonCreator caveDungeonCreator = new CaveDungeonCreator(TileType.Rock, TileType.CaveBackground);
             MapStore.I.dungeon = caveDungeonCreator.create(6, 60, 40);
         }
     }

@@ -14,13 +14,13 @@ public class CaveDungeonCreator {
     private int width;
     private int height;
 
-    private Tile baseTile;
-    private Tile backgroundTile;
+    private TileType baseTileType;
+    private TileType backgroundTileType;
 
-    public CaveDungeonCreator(Tile baseTile,
-                              Tile backgroundTile) {
-        this.baseTile = baseTile;
-        this.backgroundTile = backgroundTile;
+    public CaveDungeonCreator(TileType baseTileType,
+                              TileType backgroundTileType) {
+        this.baseTileType = baseTileType;
+        this.backgroundTileType = backgroundTileType;
     }
 
     public Dungeon create(int steps,
@@ -34,7 +34,7 @@ public class CaveDungeonCreator {
 
             long start = System.currentTimeMillis();
             //Create a new map
-            cellmap = new Dungeon(width, height, baseTile, backgroundTile);
+            cellmap = new Dungeon(width, height, baseTileType, backgroundTileType);
             //Set up the map with random values
             cellmap = initialiseMap(cellmap);
 
@@ -46,7 +46,6 @@ public class CaveDungeonCreator {
             System.out.println("Elapsed: " + (System.currentTimeMillis() - start) + " ms");
         } while (refine(cellmap) > 2);
 
-        placeLadders(cellmap);
         placePlatforms(cellmap);
 
         return cellmap;
@@ -59,52 +58,21 @@ public class CaveDungeonCreator {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
 
-                int gap = verticalGap(dungeon, i, j, Tile.WoodenPlatform);
+                int gap = verticalGap(dungeon, i, j, TileType.WoodenPlatform);
 
-                if (dungeon.getTile(i, j) == Tile.None
+                if (dungeon.getTile(i, j) == TileType.None
                         && hasNoTilesAbove(dungeon, i, j, 3)
                         && hasNoTilesBelow(dungeon, i, j, 3)
                         && gap <= 5
                         && gap >= 1
                         && new Random().nextInt(100) <= baseChance) {
 
-                    for (int k = i; k >= 0 && dungeon.getTile(k, j) == Tile.None; k--) {
-                        dungeon.setTile(k, j, Tile.WoodenPlatform);
+                    for (int k = i; k >= 0 && dungeon.getTile(k, j) == TileType.None; k--) {
+                        dungeon.setTile(k, j, TileType.WoodenPlatform);
                     }
 
-                    for (int k = i + 1; k < width && dungeon.getTile(k, j) == Tile.None; k++) {
-                        dungeon.setTile(k, j, Tile.WoodenPlatform);
-                    }
-                }
-            }
-        }
-    }
-
-    private void placeLadders(Dungeon dungeon) {
-
-        int baseChance = 100;
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-
-                if (dungeon.getTile(i, j) == baseTile
-                        && j >= 1
-                        && j < height - 2
-                        && dungeon.getTile(i, j + 1) == Tile.None
-                        && hasNoTilesAbove(dungeon, i, j + 1, 6)
-                        && hasNoTilesToLeft(dungeon, i, j + 1, 4)
-                        && hasNoTilesToRight(dungeon, i, j + 1, 4)
-                        && (between(verticalGap(dungeon, i, j + 7, Tile.None), 2, 4)
-                        || between(verticalGap(dungeon, i, j + 6, Tile.None), 2, 4)
-                        || between(verticalGap(dungeon, i, j + 5, Tile.None), 2, 4)
-                        || between(verticalGap(dungeon, i, j + 4, Tile.None), 2, 4)
-                        || between(verticalGap(dungeon, i, j + 3, Tile.None), 2, 4)
-                )
-                        //&& verticalGap(dungeon, i, j + 6, Tile.None) > 1
-                        && new Random().nextInt(100) <= baseChance) {
-
-                    for (int k = j + 1; k < height && dungeon.getTile(i, k) == Tile.None; k++) {
-                        dungeon.setTile(i, k, Tile.Ladder);
+                    for (int k = i + 1; k < width && dungeon.getTile(k, j) == TileType.None; k++) {
+                        dungeon.setTile(k, j, TileType.WoodenPlatform);
                     }
                 }
             }
@@ -121,22 +89,22 @@ public class CaveDungeonCreator {
     private int verticalGap(Dungeon dungeon,
                             int x,
                             int y,
-                            Tile excludedTile) {
+                            TileType excludedTileType) {
 
         if (x < 0 || y >= height || y < 0 || x >= width) {
             return 0;
         }
 
-        if (dungeon.getTile(x, y) != Tile.None) {
+        if (dungeon.getTile(x, y) != TileType.None) {
             return 0;
         }
 
         int gap = 1;
-        for (int i = x - 1; i >= 0 && (dungeon.getTile(i, y) == Tile.None || dungeon.getTile(i, y) == excludedTile); i--) {
+        for (int i = x - 1; i >= 0 && (dungeon.getTile(i, y) == TileType.None || dungeon.getTile(i, y) == excludedTileType); i--) {
             gap++;
         }
 
-        for (int i = x + 1; i < width && (dungeon.getTile(i, y) == Tile.None || dungeon.getTile(i, y) == excludedTile); i++) {
+        for (int i = x + 1; i < width && (dungeon.getTile(i, y) == TileType.None || dungeon.getTile(i, y) == excludedTileType); i++) {
             gap++;
         }
 
@@ -152,7 +120,7 @@ public class CaveDungeonCreator {
         }
 
         for (int x = i; x < dungeon.getWidth() - 1 && x < i + amount; x++) {
-            if (dungeon.getTile(x, j) != Tile.None) {
+            if (dungeon.getTile(x, j) != TileType.None) {
                 return false;
             }
         }
@@ -169,7 +137,7 @@ public class CaveDungeonCreator {
         }
 
         for (int x = i; x > 0 && x > i - amount; x--) {
-            if (dungeon.getTile(x, j) != Tile.None) {
+            if (dungeon.getTile(x, j) != TileType.None) {
                 return false;
             }
         }
@@ -186,7 +154,7 @@ public class CaveDungeonCreator {
         }
 
         for (int y = j; y < dungeon.getHeight() - 1 && y < j + amount; y++) {
-            if (dungeon.getTile(i, y) != Tile.None) {
+            if (dungeon.getTile(i, y) != TileType.None) {
                 return false;
             }
         }
@@ -203,7 +171,7 @@ public class CaveDungeonCreator {
         }
 
         for (int y = j; y > 0 && y > j - amount; y--) {
-            if (dungeon.getTile(i, y) != Tile.None) {
+            if (dungeon.getTile(i, y) != TileType.None) {
                 return false;
             }
         }
@@ -218,8 +186,8 @@ public class CaveDungeonCreator {
         // repeat until end of dungeon reached
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                // find first tile that is not assigned to a room
-                if (dungeon.getTile(i, j) == Tile.None && rooms[i][j] == 0) {
+                // find first tileType that is not assigned to a room
+                if (dungeon.getTile(i, j) == TileType.None && rooms[i][j] == 0) {
                     // fill empty tiles with next number
                     explore(dungeon, i, j, rooms, nextRoomNumber);
                     nextRoomNumber++;
@@ -235,7 +203,7 @@ public class CaveDungeonCreator {
 //            System.out.println();
 //        }
 
-        // link room with closest empty tile that is different room
+        // link room with closest empty tileType that is different room
         return nextRoomNumber;
     }
 
@@ -246,7 +214,7 @@ public class CaveDungeonCreator {
                         int value) {
         boolean[][] alreadyChecked = new boolean[targetDungeon.getWidth()][targetDungeon.getHeight()];
 
-        if (x < 0 || y < 0 || x >= targetDungeon.getWidth() || y >= targetDungeon.getHeight() || targetDungeon.getTile(x, y) != Tile.None) {
+        if (x < 0 || y < 0 || x >= targetDungeon.getWidth() || y >= targetDungeon.getHeight() || targetDungeon.getTile(x, y) != TileType.None) {
             return;
         }
         Deque<Vector2> points = new ArrayDeque<>();
@@ -259,13 +227,13 @@ public class CaveDungeonCreator {
 
             if (px < 0 || py < 0 || px >= targetDungeon.getWidth() || py >= targetDungeon.getHeight() || alreadyChecked[px][py]) {
 
-            } else if (targetDungeon.getTile(px, py) != Tile.None) {
+            } else if (targetDungeon.getTile(px, py) != TileType.None) {
                 alreadyChecked[px][py] = true;
 
             } else {
                 alreadyChecked[px][py] = true;
 
-                if (targetDungeon.getTile(px, py) == Tile.None && rooms[px][py] == 0) {
+                if (targetDungeon.getTile(px, py) == TileType.None && rooms[px][py] == 0) {
                     rooms[px][py] = value;
                 }
 
@@ -293,13 +261,13 @@ public class CaveDungeonCreator {
 
     private void addFrame(Dungeon map) {
         for (int i = 0; i < width; i++) {
-            map.setTile(i, 0, baseTile);
-            map.setTile(i, height - 1, baseTile);
+            map.setTile(i, 0, baseTileType);
+            map.setTile(i, height - 1, baseTileType);
         }
 
         for (int i = 0; i < height; i++) {
-            map.setTile(0, i, baseTile);
-            map.setTile(width - 1, i, baseTile);
+            map.setTile(0, i, baseTileType);
+            map.setTile(width - 1, i, baseTileType);
         }
     }
 
@@ -307,12 +275,12 @@ public class CaveDungeonCreator {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
-                map.backgroundMap[x][y] = backgroundTile;
+                map.backgroundMap[x][y] = backgroundTileType;
 
                 if (new Random().nextInt(100) < chanceToStartAlive) {
-                    map.setTile(x, y, baseTile);
+                    map.setTile(x, y, baseTileType);
                 } else {
-                    map.setTile(x, y, Tile.None);
+                    map.setTile(x, y, TileType.None);
                 }
             }
         }
@@ -336,7 +304,7 @@ public class CaveDungeonCreator {
                     count = count + 1;
                 }
                 //Otherwise, a normal check of the neighbour
-                else if (map.getTile(neighbour_x, neighbour_y) != Tile.None) {
+                else if (map.getTile(neighbour_x, neighbour_y) != TileType.None) {
                     count = count + 1;
                 }
             }
@@ -345,7 +313,7 @@ public class CaveDungeonCreator {
     }
 
     private Dungeon doSimulationStep(Dungeon oldMap) {
-        Dungeon newMap = new Dungeon(width, height, oldMap.baseTile, oldMap.backgroundTile);
+        Dungeon newMap = new Dungeon(width, height, oldMap.baseTileType, oldMap.backgroundTileType);
         newMap.backgroundMap = oldMap.backgroundMap;
         //Loop over each row and column of the map
         for (int x = 1; x < oldMap.getWidth() - 1; x++) {
@@ -353,18 +321,18 @@ public class CaveDungeonCreator {
                 int nbs = countAliveNeighbours(oldMap, x, y);
                 //The new value is based on our simulation rules
                 //First, if a cell is alive but has too few neighbours, kill it.
-                if (oldMap.getTile(x, y) == Tile.None) {
+                if (oldMap.getTile(x, y) == TileType.None) {
                     if (nbs < deathLimit) {
-                        newMap.setTile(x, y, Tile.None);
+                        newMap.setTile(x, y, TileType.None);
                     } else {
-                        newMap.setTile(x, y, baseTile);
+                        newMap.setTile(x, y, baseTileType);
                     }
                 } //Otherwise, if the cell is dead now, check if it has the right number of neighbours to be 'born'
                 else {
                     if (nbs > birthLimit) {
-                        newMap.setTile(x, y, baseTile);
+                        newMap.setTile(x, y, baseTileType);
                     } else {
-                        newMap.setTile(x, y, Tile.None);
+                        newMap.setTile(x, y, TileType.None);
                     }
                 }
             }
@@ -375,8 +343,8 @@ public class CaveDungeonCreator {
     private void fill(int x,
                       int y,
                       Dungeon oldmap,
-                      Tile originalValue,
-                      Tile value) {
+                      TileType originalValue,
+                      TileType value) {
         if (x >= oldmap.getWidth() || y >= oldmap.getHeight() || x < 0 || y < 0 || oldmap.getTile(x, y) != originalValue || oldmap.getTile(x, y) == value) {
             return;
         }

@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.controls.PlayerController;
+import com.mygdx.game.map.Dungeon;
+import com.mygdx.game.map.Tile;
 import com.mygdx.game.stage.action.camera.FollowCameraAction;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
@@ -47,6 +49,7 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
         camera.zoom = 1f;
         viewport = new FitViewport(200, 160, camera);
         viewport.apply(true);
+        stage.setViewport(viewport);
 
         GameInitializer.I.init(level);
 
@@ -55,6 +58,16 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
         CharacterStore.player.addAction(new FollowCameraAction());
 
         stage.addActor(CharacterStore.player);
+
+        Dungeon dungeon = MapStore.I.dungeon;
+
+        for (int i = 0; i < dungeon.getWidth(); i++) {
+            for (int j = 0; j < dungeon.getHeight(); j++) {
+                Tile tile = dungeon.getTile();
+            }
+        }
+
+        CharacterStore.player.debug();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -81,9 +94,11 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
         batch.begin();
         // draw here
 
-        stage.act(delta);
+        //MapStore.I.dungeon.render(batch);
 
-        MapStore.I.dungeon.render(batch);
+
+        stage.act(delta);
+        stage.draw();
 
         batch.end();
     }
