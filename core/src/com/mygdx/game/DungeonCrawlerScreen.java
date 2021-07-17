@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,10 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.controls.InputMapping;
-import com.mygdx.game.controls.KeyPressedAction;
-import com.mygdx.game.physics.PhysicsParameters;
-import com.mygdx.game.stage.action.GravityAction;
+import com.mygdx.game.controls.PlayerController;
 import com.mygdx.game.stage.action.camera.FollowCameraAction;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
@@ -27,6 +23,7 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
     OrthographicCamera camera;
     Viewport viewport;
     Stage stage;
+    PlayerController playerController;
 
     private int level;
 
@@ -38,6 +35,8 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
     public void show() {
 
         stage = new Stage();
+
+        playerController = new PlayerController();
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
@@ -51,14 +50,11 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
 
         GameInitializer.I.init(level);
 
-        camera.position.x = CharacterStore.player.x;
-        camera.position.y = CharacterStore.player.y;
+        camera.position.x = CharacterStore.player.position.x;
+        camera.position.y = CharacterStore.player.position.y;
         CharacterStore.player.addAction(new FollowCameraAction());
 
         stage.addActor(CharacterStore.player);
-
-        stage.addAction(new GravityAction());
-        stage.addAction(new KeyPressedAction());
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -77,6 +73,8 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
 
+        playerController.update(delta);
+
         batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -88,14 +86,6 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
         MapStore.I.dungeon.render(batch);
 
         batch.end();
-
-        shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(100, 10, CharacterStore.player.runningSpeed * 100, 10);
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.rect(100, 25, CharacterStore.player.jumpHeight * 100, 10);
-        shapeRenderer.end();
     }
 
     @Override

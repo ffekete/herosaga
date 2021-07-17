@@ -1,59 +1,40 @@
 package com.mygdx.game.character;
 
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.controls.JumpState;
-import com.mygdx.game.physics.Physics;
 
 public class Character extends Actor {
 
-    public float x;
-    public float y;
-    public Physics physics = new Physics();
-    public JumpState jumpState = JumpState.NoJump;
-
-    public float runningSpeed;
-    public float jumpHeight;
+    public Vector2 position;
 
     public State state = State.Idle;
 
-    public Class aClass;
     public Direction direction = Direction.Right;
 
+    public Vector2 velocity = new Vector2();
+    public Vector2  acceleration = new Vector2();
+    Rectangle bounds = new Rectangle();
+
     public Character(float x,
-                     float y,
-                     Class aClass) {
-        this.x = x;
-        this.y = y;
-        this.aClass = aClass;
+                     float y) {
+
+        this.position = new Vector2(x, y);
     }
 
     public enum State {
         Idle,
         Running,
-        Falling,
-        FallingThrough,
-        Squatting,
-        Landing,
-        JumpingAnticipation,
-        Jumping,
-        Climbing
-    }
-
-    public enum Class {
-        Rogue(0.5f, 2f);
-
-        public float speed;
-        public float jumpHeight;
-
-        Class(float speed,
-              float jumpHeight) {
-            this.speed = speed;
-            this.jumpHeight = jumpHeight;
-        }
+        Jumping
     }
 
     public enum Direction {
         Left,
         Right
     }
+
+    public void update(float delta) {
+        position.add(velocity.x * delta, velocity.y * delta);
+    }
+
 }

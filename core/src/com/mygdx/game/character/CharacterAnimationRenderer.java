@@ -52,23 +52,8 @@ public class CharacterAnimationRenderer {
         regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Running.png")), 16, 16);
         this.runningAnimation.put(character, new Animation<>(0.1f, regions[0]));
 
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Falling.png")), 16, 16);
-        this.fallingAnimation.put(character, new Animation<>(0.3f, regions[0]));
-
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Squatting.png")), 16, 16);
-        this.squattingAnimation.put(character, new Animation<>(0.1f, regions[0]));
-
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Landing.png")), 16, 16);
-        this.landingAnimation.put(character, new Animation<>(0.1f, regions[0]));
-
         regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Jumping.png")), 16, 16);
         this.jumpingAnimation.put(character, new Animation<>(0.1f, regions[0]));
-
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-JumpingAnticipation.png")), 16, 16);
-        this.jumpingAnticipationAnimation.put(character, new Animation<>(0.05f, regions[0]));
-
-        regions = TextureRegion.split(new Texture(Gdx.files.internal(fileName + "-Climbing.png")), 16, 16);
-        this.climbingAnimation.put(character, new Animation<>(0.05f, regions[0]));
     }
 
     public void render(SpriteBatch batch) {
@@ -92,7 +77,7 @@ public class CharacterAnimationRenderer {
                         }
                     }
                 }
-                batch.draw(idleTextureRegion, player.x, player.y);
+                batch.draw(idleTextureRegion, player.position.x, player.position.y);
                 break;
             case Running:
                 TextureRegion runningTextureRegion = runningAnimation.get(player).getKeyFrame(stateTimes.get(player), true);
@@ -105,60 +90,7 @@ public class CharacterAnimationRenderer {
                         runningTextureRegion.flip(true, false);
                     }
                 }
-                batch.draw(runningTextureRegion, player.x, player.y);
-                break;
-
-            case Falling:
-                TextureRegion fallingTextureRegion = fallingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
-
-                if (player.direction == Character.Direction.Left) {
-                    if (!fallingTextureRegion.isFlipX()) {
-                        fallingTextureRegion.flip(true, false);
-                    }
-                } else {
-                    if (fallingTextureRegion.isFlipX()) {
-                        fallingTextureRegion.flip(true, false);
-                    }
-                }
-
-                batch.draw(fallingTextureRegion, player.x, player.y);
-                break;
-
-            case Squatting:
-                TextureRegion sqattingTextureRegion = squattingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
-                batch.draw(sqattingTextureRegion, player.x, player.y);
-                break;
-
-            case Landing:
-                TextureRegion landingTextureRegion = landingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
-
-                if (player.direction == Character.Direction.Left) {
-                    if (!landingTextureRegion.isFlipX()) {
-                        landingTextureRegion.flip(true, false);
-                    }
-                } else {
-                    if (landingTextureRegion.isFlipX()) {
-                        landingTextureRegion.flip(true, false);
-                    }
-                }
-
-                batch.draw(landingTextureRegion, player.x, player.y);
-                break;
-
-            case JumpingAnticipation:
-                TextureRegion jumpingAnticipationTextureRegion = jumpingAnticipationAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
-
-                if (player.direction == Character.Direction.Left) {
-                    if (!jumpingAnticipationTextureRegion.isFlipX()) {
-                        jumpingAnticipationTextureRegion.flip(true, false);
-                    }
-                } else {
-                    if (jumpingAnticipationTextureRegion.isFlipX()) {
-                        jumpingAnticipationTextureRegion.flip(true, false);
-                    }
-                }
-
-                batch.draw(jumpingAnticipationTextureRegion, player.x, player.y);
+                batch.draw(runningTextureRegion, player.position.x, player.position.y);
                 break;
 
             case Jumping:
@@ -174,23 +106,7 @@ public class CharacterAnimationRenderer {
                     }
                 }
 
-                batch.draw(jumpingTextureRegion, player.x, player.y);
-                break;
-
-            case Climbing:
-                TextureRegion climbingTextureRegion = climbingAnimation.get(player).getKeyFrame(stateTimes.get(player), false);
-
-                if (player.direction == Character.Direction.Left) {
-                    if (!climbingTextureRegion.isFlipX()) {
-                        climbingTextureRegion.flip(true, false);
-                    }
-                } else {
-                    if (climbingTextureRegion.isFlipX()) {
-                        climbingTextureRegion.flip(true, false);
-                    }
-                }
-
-                batch.draw(climbingTextureRegion, player.x, player.y);
+                batch.draw(jumpingTextureRegion, player.position.x, player.position.y);
                 break;
         }
     }

@@ -22,7 +22,7 @@ public class GameInitializer {
         CameraStore.I.orthographicCamera.position.y = startPoint.y;
 
         // place player
-        CharacterStore.player = new Character(startPoint.x, startPoint.y, Character.Class.Rogue);
+        CharacterStore.player = new Character(startPoint.x, startPoint.y);
         PhysicsStore.characters.add(CharacterStore.player);
 
         CharacterAnimationRenderer.I.addAnimations(CharacterStore.player);

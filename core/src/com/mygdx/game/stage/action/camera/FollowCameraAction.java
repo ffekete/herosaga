@@ -22,8 +22,8 @@ public class FollowCameraAction extends Action {
             OrthographicCamera camera = CameraStore.I.orthographicCamera;
             Character player = CharacterStore.player;
 
-            camera.position.x = player.x;
-            camera.position.y = player.y;
+            camera.position.x = player.position.x;
+            camera.position.y = player.position.y;
             camera.update();
 
             duration = 0;
