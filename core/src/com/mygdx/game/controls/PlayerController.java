@@ -9,8 +9,8 @@ public class PlayerController {
 
     private static final long LONG_JUMP_PRESS = 200L;
     private static final float ACCELERATION = 120f;
-    private static final float GRAVITY = -200f;
-    private static final float MAX_JUMP_SPEED = 90f;
+    private static final float GRAVITY = -250f;
+    private static final float MAX_JUMP_SPEED = 100f;
     private static final float DAMP = 0.90f;
     private static final float MAX_VEL = 40f;
     public static Integer fallingThroughY = null;
@@ -44,7 +44,7 @@ public class PlayerController {
         PlayerCollisionChecker.checkCollisionAbove(delta);
         PlayerCollisionChecker.checkCollisionLeft(delta);
         PlayerCollisionChecker.checkCollisionRight(delta);
-        PlayerCollisionChecker.checkCollision(delta);
+        PlayerCollisionChecker.checkCollisionOfPlatforms(delta);
 
         CharacterStore.player.update(delta);
 

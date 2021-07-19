@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PlayerCollisionChecker {
 
-    public static void checkCollision(float delta) {
+    public static void checkCollisionOfPlatforms(float delta) {
         Rectangle playerRect = new Rectangle(CharacterStore.player.bounds);
         playerRect.x += (CharacterStore.player.velocity.x * delta);
         playerRect.y += (CharacterStore.player.velocity.y * delta);
@@ -24,15 +24,8 @@ public class PlayerCollisionChecker {
             boundsDown.add(MapStore.I.dungeon.bounds[px][py]);
         }
 
-        System.out.println(playerRect.y);
-        System.out.println(((int)playerRect.y) / 16 * 16);
-
         if (CharacterStore.player.velocity.y == 0 && playerRect.y - ((int) playerRect.y) / 16 * 16 > 0.1f) {
-            //CharacterStore.player.position.y = ((((int)CharacterStore.player.position.y) / 16) * 16);
-
-            PlayerController.fallingThroughY = ((((int)CharacterStore.player.position.y) / 16) * 16) / 16;
-
-            System.out.println("fixing " + CharacterStore.player.position.y + " to " +  ((((int)CharacterStore.player.position.y) / 16) * 16));
+            PlayerController.fallingThroughY = ((((int) CharacterStore.player.position.y) / 16) * 16) / 16;
         }
     }
 
