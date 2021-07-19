@@ -44,6 +44,7 @@ public class PlayerController {
         PlayerCollisionChecker.checkCollisionAbove(delta);
         PlayerCollisionChecker.checkCollisionLeft(delta);
         PlayerCollisionChecker.checkCollisionRight(delta);
+        PlayerCollisionChecker.checkCollision(delta);
 
         CharacterStore.player.update(delta);
 
