@@ -33,15 +33,11 @@ public class PlayerController {
         if (CharacterStore.player.acceleration.x == 0) CharacterStore.player.velocity.x *= DAMP;
 
         if (CharacterStore.player.velocity.x > MAX_VEL) {
-
             CharacterStore.player.velocity.x = MAX_VEL;
-
         }
 
         if (CharacterStore.player.velocity.x < -MAX_VEL) {
-
             CharacterStore.player.velocity.x = -MAX_VEL;
-
         }
 
         PlayerCollisionChecker.checkCollisionBelow(delta);
