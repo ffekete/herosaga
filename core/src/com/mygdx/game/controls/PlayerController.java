@@ -9,10 +9,11 @@ public class PlayerController {
 
     private static final long LONG_JUMP_PRESS = 200L;
     private static final float ACCELERATION = 120f;
-    private static final float GRAVITY = -160f;
+    private static final float GRAVITY = -200f;
     private static final float MAX_JUMP_SPEED = 90f;
     private static final float DAMP = 0.90f;
     private static final float MAX_VEL = 40f;
+    public static Integer fallingThroughY = null;
 
     private long jumpPressedTime;
     private boolean jumpingPressed;
@@ -88,20 +89,29 @@ public class PlayerController {
         }
 
         if (Gdx.input.isKeyPressed(InputMapping.SPACE)) {
-            if (CharacterStore.player.state != Character.State.Jumping && PlayerCollisionChecker.isStandingOnSolidGround(Gdx.graphics.getDeltaTime())) {
-                jumpingPressed = true;
-                jumpPressedTime = System.currentTimeMillis();
-                CharacterStore.player.state = Character.State.Jumping;
-                CharacterStore.player.velocity.y = MAX_JUMP_SPEED;
-            } else {
-                if (jumpingPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
-                    jumpingPressed = false;
+
+            if (Gdx.input.isKeyPressed(InputMapping.DOWN) && fallingThroughY == null) {
+                if (PlayerCollisionChecker.isStandingOnPlatform(hashCode())) {
+                    CharacterStore.player.position.y -= 1;
+                    fallingThroughY = ((int) CharacterStore.player.position.y - 1) / 16;
+                }
+            }
+
+            if (fallingThroughY == null) {
+                if (!jumpingPressed && CharacterStore.player.state != Character.State.Jumping && PlayerCollisionChecker.isStandingOnSolidGround(Gdx.graphics.getDeltaTime())) {
+                    jumpingPressed = true;
+                    jumpPressedTime = System.currentTimeMillis();
+                    CharacterStore.player.state = Character.State.Jumping;
+                    CharacterStore.player.velocity.y = MAX_JUMP_SPEED;
                 } else {
-                    if (jumpingPressed) {
+                    if (jumpingPressed && ((System.currentTimeMillis() - jumpPressedTime) < LONG_JUMP_PRESS)) {
                         CharacterStore.player.velocity.y = MAX_JUMP_SPEED;
                     }
                 }
             }
+
+        } else {
+            jumpingPressed = false;
         }
     }
 

@@ -35,7 +35,19 @@ public class PlayerCollisionChecker {
         }
 
         if (CharacterStore.player.velocity.y < 0) {
-            if (boundsDown.stream().anyMatch(r -> r != null && r.overlaps(playerRect) && MapStore.I.dungeon.getTile((int)r.x / 16, (int)r.y / 16).obstacleFromUp)) {
+
+            if (PlayerController.fallingThroughY != null) {
+                if (PlayerController.fallingThroughY == ((int)playerRect.y / 16)) {
+                    return;
+                } else {
+                    PlayerController.fallingThroughY = null;
+                }
+            }
+
+            if (boundsDown.stream().anyMatch(r -> r != null
+                    && r.overlaps(playerRect)
+                    && MapStore.I.dungeon.getTile((int) r.x / 16, (int) r.y / 16).obstacleFromUp
+                    && r.y < playerRect.y)) {
                 CharacterStore.player.velocity.y = 0;
                 CharacterStore.player.state = CharacterStore.player.velocity.x != 0 ? Character.State.Running : Character.State.Idle;
             }
@@ -70,7 +82,7 @@ public class PlayerCollisionChecker {
             if (boundsDown.stream().anyMatch(r -> {
                 return r != null
                         && r.overlaps(playerRect) &&
-                        MapStore.I.dungeon.getTile((int)r.x / 16, (int)r.y / 16).obstacleFromDown;
+                        MapStore.I.dungeon.getTile((int) r.x / 16, (int) r.y / 16).obstacleFromDown;
             })) {
                 CharacterStore.player.velocity.y = 0;
                 CharacterStore.player.state = CharacterStore.player.velocity.x != 0 ? Character.State.Running : Character.State.Idle;
@@ -104,7 +116,9 @@ public class PlayerCollisionChecker {
         }
 
         if (CharacterStore.player.velocity.x < 0) {
-            if (boundsLeft.stream().anyMatch(r -> r != null && r.overlaps(playerRect))) {
+            if (boundsLeft.stream().anyMatch(r -> r != null
+                    && r.overlaps(playerRect)
+                    && MapStore.I.dungeon.getTile((int) r.x / 16, (int) r.y / 16).obstacleFromSide)) {
                 CharacterStore.player.velocity.x = 0;
                 CharacterStore.player.state = Character.State.Idle;
             }
@@ -137,7 +151,9 @@ public class PlayerCollisionChecker {
         }
 
         if (CharacterStore.player.velocity.x > 0) {
-            if (boundsLeft.stream().anyMatch(r -> r != null && r.overlaps(playerRect))) {
+            if (boundsLeft.stream().anyMatch(r -> r != null
+                    && r.overlaps(playerRect)
+                    && MapStore.I.dungeon.getTile((int) r.x / 16, (int) r.y / 16).obstacleFromSide)) {
                 CharacterStore.player.velocity.x = 0;
                 CharacterStore.player.state = Character.State.Idle;
             }
@@ -154,10 +170,7 @@ public class PlayerCollisionChecker {
         int lpx = (int) (CharacterStore.player.bounds.x / 16);
         int rpx = (int) ((CharacterStore.player.bounds.x + CharacterStore.player.bounds.width) / 16);
 
-        int opy = (int) ((playerRect.y) / 16);
         int bpy = (int) ((playerRect.y - 1) / 16);
-
-        List<Rectangle> boundsDown = new ArrayList<>();
 
         if (bpy < MapStore.I.dungeon.getHeight() && bpy >= 0) {
             if (MapStore.I.dungeon.getTile(px, bpy).obstacleFromUp) {
@@ -169,6 +182,34 @@ public class PlayerCollisionChecker {
             }
 
             if (rpx < MapStore.I.dungeon.getWidth() && MapStore.I.dungeon.getTile(rpx, bpy).obstacleFromUp) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isStandingOnPlatform(float delta) {
+        Rectangle playerRect = new Rectangle(CharacterStore.player.bounds);
+        playerRect.x += (CharacterStore.player.velocity.x * delta);
+        playerRect.y += (CharacterStore.player.velocity.y * delta);
+
+        int px = (int) ((CharacterStore.player.bounds.x + CharacterStore.player.bounds.width / 2) / 16);
+        int lpx = (int) (CharacterStore.player.bounds.x / 16);
+        int rpx = (int) ((CharacterStore.player.bounds.x + CharacterStore.player.bounds.width) / 16);
+
+        int bpy = (int) ((playerRect.y - 1) / 16);
+
+        if (bpy < MapStore.I.dungeon.getHeight() && bpy >= 0) {
+            if (MapStore.I.dungeon.getTile(px, bpy).obstacleFromUp && !MapStore.I.dungeon.getTile(px, bpy).obstacleFromDown) {
+                return true;
+            }
+
+            if (lpx >= 0 && MapStore.I.dungeon.getTile(lpx, bpy).obstacleFromUp && !MapStore.I.dungeon.getTile(px, bpy).obstacleFromDown) {
+                return true;
+            }
+
+            if (rpx < MapStore.I.dungeon.getWidth() && MapStore.I.dungeon.getTile(rpx, bpy).obstacleFromUp && !MapStore.I.dungeon.getTile(px, bpy).obstacleFromDown) {
                 return true;
             }
         }
