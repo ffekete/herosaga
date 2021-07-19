@@ -17,7 +17,7 @@ public class PlayerCollisionChecker {
 
         int px = (int) ((playerRect.x + CharacterStore.player.bounds.width / 2) / 16);
         int lpx = (int) ((playerRect.x + 1) / 16);
-        int rpx = (int) ((playerRect.x + CharacterStore.player.bounds.width) / 16);
+        int rpx = (int) ((playerRect.x + CharacterStore.player.bounds.width - 1) / 16);
         int bpy = (int) ((playerRect.y - 1) / 16);
 
         List<Rectangle> boundsDown = new ArrayList<>();
@@ -35,7 +35,43 @@ public class PlayerCollisionChecker {
         }
 
         if (CharacterStore.player.velocity.y < 0) {
-            if (boundsDown.stream().anyMatch(r -> r != null && r.overlaps(playerRect))) {
+            if (boundsDown.stream().anyMatch(r -> r != null && r.overlaps(playerRect) && MapStore.I.dungeon.getTile((int)r.x / 16, (int)r.y / 16).obstacleFromUp)) {
+                CharacterStore.player.velocity.y = 0;
+                CharacterStore.player.state = CharacterStore.player.velocity.x != 0 ? Character.State.Running : Character.State.Idle;
+            }
+        }
+    }
+
+    public static void checkCollisionAbove(float delta) {
+        Rectangle playerRect = new Rectangle(CharacterStore.player.bounds);
+        playerRect.x += (CharacterStore.player.velocity.x * delta);
+        playerRect.y += (CharacterStore.player.velocity.y * delta);
+
+        int px = (int) ((playerRect.x + CharacterStore.player.bounds.width / 2) / 16);
+        int lpx = (int) ((playerRect.x + 1) / 16);
+        int rpx = (int) ((playerRect.x + CharacterStore.player.bounds.width - 1) / 16);
+        int bpy = (int) ((playerRect.y + playerRect.height + 1) / 16);
+
+        List<Rectangle> boundsDown = new ArrayList<>();
+
+        if (bpy < MapStore.I.dungeon.getHeight() && bpy >= 0) {
+            boundsDown.add(MapStore.I.dungeon.bounds[px][bpy]);
+
+            if (lpx >= 0) {
+                boundsDown.add(MapStore.I.dungeon.bounds[lpx][bpy]);
+            }
+
+            if (rpx < MapStore.I.dungeon.getWidth()) {
+                boundsDown.add(MapStore.I.dungeon.bounds[rpx][bpy]);
+            }
+        }
+
+        if (CharacterStore.player.velocity.y > 0) {
+            if (boundsDown.stream().anyMatch(r -> {
+                return r != null
+                        && r.overlaps(playerRect) &&
+                        MapStore.I.dungeon.getTile((int)r.x / 16, (int)r.y / 16).obstacleFromDown;
+            })) {
                 CharacterStore.player.velocity.y = 0;
                 CharacterStore.player.state = CharacterStore.player.velocity.x != 0 ? Character.State.Running : Character.State.Idle;
             }
@@ -50,7 +86,7 @@ public class PlayerCollisionChecker {
 
         int lpx = (int) (playerRect.x / 16);
         int py = (int) ((playerRect.y + CharacterStore.player.bounds.height / 2f) / 16);
-        int bpy = (int) ((playerRect.y -1) / 16);
+        int bpy = (int) ((playerRect.y - 1) / 16);
         int apy = (int) ((playerRect.y + CharacterStore.player.bounds.height + 1) / 16);
 
         List<Rectangle> boundsLeft = new ArrayList<>();
@@ -68,6 +104,39 @@ public class PlayerCollisionChecker {
         }
 
         if (CharacterStore.player.velocity.x < 0) {
+            if (boundsLeft.stream().anyMatch(r -> r != null && r.overlaps(playerRect))) {
+                CharacterStore.player.velocity.x = 0;
+                CharacterStore.player.state = Character.State.Idle;
+            }
+        }
+    }
+
+    public static void checkCollisionRight(float delta) {
+        Rectangle playerRect = new Rectangle(CharacterStore.player.bounds);
+        playerRect.x += (CharacterStore.player.velocity.x * delta);
+        playerRect.y += (CharacterStore.player.velocity.y * delta);
+
+
+        int rpx = (int) ((playerRect.x + playerRect.width) / 16);
+        int py = (int) ((playerRect.y + CharacterStore.player.bounds.height / 2f) / 16);
+        int bpy = (int) ((playerRect.y - 1) / 16);
+        int apy = (int) ((playerRect.y + CharacterStore.player.bounds.height + 1) / 16);
+
+        List<Rectangle> boundsLeft = new ArrayList<>();
+
+        if (rpx < MapStore.I.dungeon.getWidth()) {
+            boundsLeft.add(MapStore.I.dungeon.bounds[rpx][py]);
+
+            if (bpy >= 0) {
+                boundsLeft.add(MapStore.I.dungeon.bounds[rpx][bpy]);
+            }
+
+            if (apy < MapStore.I.dungeon.getHeight()) {
+                boundsLeft.add(MapStore.I.dungeon.bounds[rpx][apy]);
+            }
+        }
+
+        if (CharacterStore.player.velocity.x > 0) {
             if (boundsLeft.stream().anyMatch(r -> r != null && r.overlaps(playerRect))) {
                 CharacterStore.player.velocity.x = 0;
                 CharacterStore.player.state = Character.State.Idle;
