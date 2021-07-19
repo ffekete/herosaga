@@ -2,6 +2,8 @@ package com.mygdx.game.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.map.tiles.Adjacency;
 import com.mygdx.game.store.CameraStore;
 
@@ -13,6 +15,7 @@ public class Dungeon {
     int height;
     TileType[][] backgroundMap;
     TileType[][] map;
+    public Rectangle[][] bounds;
     TileType baseTileType;
     TileType backgroundTileType;
     TextureRegion mapTextureRegion;
@@ -26,6 +29,7 @@ public class Dungeon {
         this.height = height;
         this.map = new TileType[width][height];
         this.backgroundMap = new TileType[width][height];
+        this.bounds = new Rectangle[width][height];
         this.baseTileType = baseTileType;
         this.backgroundTileType = backgroundTileType;
         this.mapTextureRegion = baseTileType.mapToRegion(baseTileType);
@@ -36,6 +40,14 @@ public class Dungeon {
                         int y,
                         TileType value) {
         this.map[x][y] = value;
+
+        if(value.bounds != null) {
+            this.bounds[x][y] = new Rectangle(value.bounds);
+            this.bounds[x][y].x = value.bounds.x + x * 16;
+            this.bounds[x][y].y = value.bounds.y  + y * 16;
+        } else {
+            this.bounds[x][y] = null;
+        }
     }
 
     public TileType getTile(int x,
@@ -57,7 +69,6 @@ public class Dungeon {
                 renderBackground(i, j, spriteBatch);
             }
         }
-
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -263,25 +274,32 @@ public class Dungeon {
         }
     }
 
-    public TileType getTileExactly(float px, float py) {
-        return getTile(((int)px) / 16,((int)py) / 16);
+    public TileType getTileExactly(float px,
+                                   float py) {
+        return getTile(((int) px) / 16, ((int) py) / 16);
     }
 
-    public TileType getTileBelow(float px, float py, float amount) {
-        return getTile(((int)px) / 16,((int)(py-amount)) / 16);
+    public TileType getTileBelow(float px,
+                                 float py,
+                                 float amount) {
+        return getTile(((int) px) / 16, ((int) (py - amount)) / 16);
     }
 
-    public TileType getTileToLeft(float px, float py, float amount) {
-        return getTile(((int)(px -amount)) / 16,((int)py) / 16);
+    public TileType getTileToLeft(float px,
+                                  float py,
+                                  float amount) {
+        return getTile(((int) (px - amount)) / 16, ((int) py) / 16);
     }
 
-    public TileType getTileToRight(float px, float py, float amount) {
-        return getTile(((int)(px + amount)) / 16,((int)py) / 16);
+    public TileType getTileToRight(float px,
+                                   float py,
+                                   float amount) {
+        return getTile(((int) (px + amount)) / 16, ((int) py) / 16);
     }
 
     public TileType getTileAbove(float px,
                                  float py,
                                  float amount) {
-        return getTile(((int)px) / 16,((int)(py+amount)) / 16);
+        return getTile(((int) px) / 16, ((int) (py + amount)) / 16);
     }
 }

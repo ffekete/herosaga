@@ -17,7 +17,8 @@ public class Character extends Image {
 
     public Vector2 velocity = new Vector2();
     public Vector2 acceleration = new Vector2();
-    Rectangle bounds = new Rectangle();
+
+    public Rectangle bounds = new Rectangle();
 
     public Character(float x,
                      float y,
@@ -45,6 +46,10 @@ public class Character extends Image {
         position.add(velocity.x * delta, velocity.y * delta);
         setX(position.x);
         setY(position.y);
+        bounds.x = position.x + 6;
+        bounds.y = position.y;
+        bounds.width = 4;
+        bounds.height = 12;
     }
 
     @Override

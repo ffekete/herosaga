@@ -17,7 +17,7 @@ public class DungeonSpaceSpotter {
                         if (j + y >= dungeon.getHeight() || dungeon.getTile(i, j + y) != TileType.None) {
                             continue;
                         }
-                        return new Vector2(i * 16 + 16, j * 16 + 16); // translate dungeon tile to real world coordinate
+                        return new Vector2(i * 16 + 16, j * 16 + 17); // translate dungeon tile to real world coordinate
                     }
                 }
             }

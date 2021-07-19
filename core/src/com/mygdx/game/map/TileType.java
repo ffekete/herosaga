@@ -10,8 +10,8 @@ public enum TileType {
     None(false, false, false, false, null),
     Grass(true, true, true, true, new Rectangle(0, 0, 16, 16)),
     Rock(true, true, true, true, new Rectangle(0, 0, 16, 16)),
-    CaveBackground(false, false, false, false, new Rectangle(0, 0, 16, 16)),
-    WoodenPlatform(false, false, true, false, new Rectangle(0, 0, 16, 16));
+    CaveBackground(false, false, false, false, null),
+    WoodenPlatform(false, false, true, false, new Rectangle(0, 10, 16, 6));
 
     boolean tileSet;
     public boolean obstacleFromSide;

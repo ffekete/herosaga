@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.controls.PlayerController;
 import com.mygdx.game.map.Dungeon;
-import com.mygdx.game.map.Tile;
 import com.mygdx.game.stage.action.camera.FollowCameraAction;
 import com.mygdx.game.store.CameraStore;
 import com.mygdx.game.store.CharacterStore;
@@ -56,18 +56,12 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
         camera.position.x = CharacterStore.player.position.x;
         camera.position.y = CharacterStore.player.position.y;
         CharacterStore.player.addAction(new FollowCameraAction());
+        //CharacterStore.player.debug();
 
         stage.addActor(CharacterStore.player);
 
+
         Dungeon dungeon = MapStore.I.dungeon;
-
-        for (int i = 0; i < dungeon.getWidth(); i++) {
-            for (int j = 0; j < dungeon.getHeight(); j++) {
-                Tile tile = dungeon.getTile();
-            }
-        }
-
-        CharacterStore.player.debug();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -86,21 +80,54 @@ public class DungeonCrawlerScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
 
-        playerController.update(delta);
+        playerController.update(delta, shapeRenderer);
 
         batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
-        // draw here
+        MapStore.I.dungeon.render(batch);
+        batch.end();
 
-        //MapStore.I.dungeon.render(batch);
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.rect(
+//                CharacterStore.player.position.x,
+//                CharacterStore.player.position.y,
+//                16,
+//                16
+//        );
+
+
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.rect(
+                CharacterStore.player.bounds.x,
+                CharacterStore.player.bounds.y,
+                CharacterStore.player.bounds.width,
+                CharacterStore.player.bounds.height
+        );
+
+        shapeRenderer.setColor(Color.GREEN);
+        for (int i = 0; i < MapStore.I.dungeon.getWidth(); i++) {
+            for (int j = 0; j < MapStore.I.dungeon.getHeight(); j++) {
+
+                if (MapStore.I.dungeon.getTile(i, j).bounds != null) {
+                    shapeRenderer.rect(MapStore.I.dungeon.bounds[i][j].x,
+                            MapStore.I.dungeon.bounds[i][j].y,
+                            MapStore.I.dungeon.bounds[i][j].width,
+                            MapStore.I.dungeon.bounds[i][j].height);
+                }
+            }
+        }
+        shapeRenderer.end();
 
         stage.act(delta);
         stage.draw();
 
-        batch.end();
+
     }
 
     @Override

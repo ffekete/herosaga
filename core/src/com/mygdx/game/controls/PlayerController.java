@@ -1,22 +1,24 @@
 package com.mygdx.game.controls;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.character.Character;
 import com.mygdx.game.store.CharacterStore;
 
 public class PlayerController {
 
-    private static final long LONG_JUMP_PRESS = 150l;
-    private static final float ACCELERATION = 20f;
-    private static final float GRAVITY = -80f;
-    private static final float MAX_JUMP_SPEED = 70f;
+    private static final long LONG_JUMP_PRESS = 200L;
+    private static final float ACCELERATION = 120f;
+    private static final float GRAVITY = -160f;
+    private static final float MAX_JUMP_SPEED = 90f;
     private static final float DAMP = 0.90f;
-    private static final float MAX_VEL = 4f;
+    private static final float MAX_VEL = 40f;
 
     private long jumpPressedTime;
     private boolean jumpingPressed;
 
-    public void update(float delta) {
+    public void update(float delta,
+                       ShapeRenderer shapeRenderer) {
 
         processInput();
 
@@ -41,6 +43,9 @@ public class PlayerController {
 
         }
 
+        PlayerCollisionChecker.checkCollisionBelow(delta);
+        PlayerCollisionChecker.checkCollisionLeft(delta);
+
         CharacterStore.player.update(delta);
 
         if (CharacterStore.player.position.y < 0) {
@@ -57,28 +62,12 @@ public class PlayerController {
 
         if (CharacterStore.player.position.x < 0) {
             CharacterStore.player.position.x = 0;
-            //CharacterStore.player.position = CharacterStore.player.position;
             if (!CharacterStore.player.state.equals(Character.State.Jumping)) {
                 CharacterStore.player.state = Character.State.Idle;
             }
         }
 
-//        if (CharacterStore.player.position.x > WIDTH - bob.getBounds().width) {
-//
-//            CharacterStore.player.position.x = WIDTH - bob.getBounds().width;
-//
-//            bob.setPosition(CharacterStore.player.position);
-//
-//            if (!bob.getState().equals(State.JUMPING)) {
-//
-//                bob.setState(State.IDLE);
-//
-//            }
-//
-//        }
-
     }
-
 
     public void processInput() {
         if (Gdx.input.isKeyPressed(InputMapping.LEFT)) {
@@ -97,8 +86,7 @@ public class PlayerController {
         }
 
         if (Gdx.input.isKeyPressed(InputMapping.SPACE)) {
-
-            if (CharacterStore.player.state != Character.State.Jumping) {
+            if (CharacterStore.player.state != Character.State.Jumping && PlayerCollisionChecker.isStandingOnSolidGround(Gdx.graphics.getDeltaTime())) {
                 jumpingPressed = true;
                 jumpPressedTime = System.currentTimeMillis();
                 CharacterStore.player.state = Character.State.Jumping;
